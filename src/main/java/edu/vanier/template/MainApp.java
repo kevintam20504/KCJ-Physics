@@ -10,6 +10,8 @@ import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+//hello
+
 /**
  * This is a JavaFX project template to be used for creating GUI applications.
  * The JavaFX GUI framework (version: 20.0.2) is linked to this project in the
