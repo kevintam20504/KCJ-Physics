@@ -1,6 +1,6 @@
-package edu.vanier.template;
+package Main;
 
-import edu.vanier.template.controllers.FXMLMainAppController;
+import Controllers.FXMLMainAppController;
 import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
