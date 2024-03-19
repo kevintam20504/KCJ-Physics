@@ -13,7 +13,6 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 
-
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="541.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <right>
       <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
@@ -42,7 +41,7 @@
    <bottom>
       <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <LineChart prefHeight="150.0" prefWidth="206.0" title="Speed">
+            <LineChart prefHeight="150.0" prefWidth="206.0" title="Speed" HBox.hgrow="ALWAYS">
               <xAxis>
                 <CategoryAxis side="BOTTOM" />
               </xAxis>
@@ -50,7 +49,7 @@
                 <NumberAxis side="LEFT" />
               </yAxis>
             </LineChart>
-            <LineChart layoutX="10.0" layoutY="10.0" prefHeight="150.0" prefWidth="206.0" title="DIsance">
+            <LineChart layoutX="10.0" layoutY="10.0" prefHeight="150.0" prefWidth="206.0" title="DIsance" HBox.hgrow="ALWAYS">
                <xAxis>
                   <CategoryAxis side="BOTTOM" />
                </xAxis>
