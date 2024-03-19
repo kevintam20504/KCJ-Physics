@@ -8,6 +8,6 @@ package Controllers;
  *
  * @author JD
  */
-public class RichochetController {
+public class RicochetController {
     
 }

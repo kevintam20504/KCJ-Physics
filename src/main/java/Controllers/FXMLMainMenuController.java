@@ -46,7 +46,7 @@ public class FXMLMainMenuController {
             //-- 1) Load the scene graph from the specified FXML file and 
             // associate it with its FXML controller.
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Gravity.fxml"));
-            //loader.setController(new FXMLMainMenuController());
+            loader.setController(new GravityController());
             Pane root = loader.load();
             //-- 2) Create and set the scene to the stage.
             Scene scene = new Scene(root);
@@ -69,7 +69,7 @@ public class FXMLMainMenuController {
             //-- 1) Load the scene graph from the specified FXML file and 
             // associate it with its FXML controller.
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Collision.fxml"));
-            //loader.setController(new FXMLMainMenuController());
+            loader.setController(new CollisionController());
             Pane root = loader.load();
             //-- 2) Create and set the scene to the stage.
             Scene scene = new Scene(root);
@@ -92,7 +92,7 @@ public class FXMLMainMenuController {
             //-- 1) Load the scene graph from the specified FXML file and 
             // associate it with its FXML controller.
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Ricochet.fxml"));
-            //loader.setController(new FXMLMainMenuController());
+            loader.setController(new RicochetController());
             Pane root = loader.load();
             //-- 2) Create and set the scene to the stage.
             Scene scene = new Scene(root);

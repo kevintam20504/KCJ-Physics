@@ -20,14 +20,14 @@
    <center>
       <AnchorPane prefHeight="550.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
          <children>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="100.0" layoutX="285.0" layoutY="340.0" stroke="BLACK" strokeType="INSIDE" width="100.0" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="285.0" />
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="100.0" layoutX="835.0" layoutY="340.0" stroke="BLACK" strokeType="INSIDE" width="100.0" AnchorPane.bottomAnchor="60.0" AnchorPane.rightAnchor="215.0" />
+            <Rectangle fx:id="block1" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="100.0" layoutX="285.0" layoutY="340.0" stroke="BLACK" strokeType="INSIDE" width="100.0" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="285.0" />
+            <Rectangle fx:id="block2" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="100.0" layoutX="835.0" layoutY="340.0" stroke="BLACK" strokeType="INSIDE" width="100.0" AnchorPane.bottomAnchor="60.0" AnchorPane.rightAnchor="215.0" />
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#a1a4a8" height="60.0" layoutX="-32.0" layoutY="492.0" stroke="BLACK" strokeType="INSIDE" width="2056.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-32.0" AnchorPane.rightAnchor="-824.0" />
             <HBox alignment="CENTER" layoutX="450.0" layoutY="495.0" prefHeight="50.0" prefWidth="300.0" spacing="15.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="450.0" AnchorPane.rightAnchor="450.0">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="77.0" text="Reset" />
-                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="77.0" text="Start/Stop" />
-                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="77.0" text="Exit" />
+                  <Button fx:id="resetButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="77.0" text="Reset" />
+                  <Button fx:id="startStopButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="77.0" text="Start/Stop" />
+                  <Button fx:id="exitButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="77.0" text="Exit" />
                </children>
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -39,7 +39,7 @@
    <bottom>
       <HBox prefHeight="250.0" prefWidth="1200.0" style="-fx-border-style: solid inside; -fx-border-radius: 2; -fx-border-width: 2;" BorderPane.alignment="CENTER">
          <children>
-            <LineChart prefHeight="233.0" prefWidth="400.0" HBox.hgrow="SOMETIMES">
+            <LineChart fx:id="block1Graph" prefHeight="233.0" prefWidth="400.0" HBox.hgrow="SOMETIMES">
               <xAxis>
                 <CategoryAxis side="BOTTOM" />
               </xAxis>
@@ -62,20 +62,20 @@
               </rowConstraints>
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Mass 1" />
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Velocity 2" GridPane.rowIndex="1" />
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Mass 1" GridPane.rowIndex="2" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Velocity 1" GridPane.rowIndex="1" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Mass 2" GridPane.rowIndex="2" />
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Velocity 2" GridPane.rowIndex="3" />
-                  <Slider showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" />
-                  <Slider showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <Slider showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" />
-                  <Slider showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <TextField GridPane.columnIndex="2" />
-                  <TextField GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                  <TextField GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                  <TextField GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                  <TextField GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                  <Slider fx:id="mass1Slider" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" />
+                  <Slider fx:id="velocity1Slider" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Slider fx:id="mass2Slider" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" />
+                  <Slider fx:id="velocity2Slider" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <TextField fx:id="mass1Textfield" GridPane.columnIndex="2" />
+                  <TextField fx:id="velocity1Textfield" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <TextField fx:id="mass2Textfield" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                  <TextField fx:id="velocity2Textfield" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                  <TextField fx:id="elasticityTextfield" GridPane.columnIndex="2" GridPane.rowIndex="4" />
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Elasticity(%)" GridPane.rowIndex="4" />
-                  <Slider showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <Slider fx:id="elasticitySlider" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                </children>
                <opaqueInsets>
                   <Insets />
@@ -84,7 +84,7 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
             </GridPane>
-            <LineChart prefHeight="233.0" prefWidth="404.0" HBox.hgrow="SOMETIMES">
+            <LineChart fx:id="block2Graph" prefHeight="233.0" prefWidth="404.0" HBox.hgrow="SOMETIMES">
               <xAxis>
                 <CategoryAxis side="BOTTOM" />
               </xAxis>
