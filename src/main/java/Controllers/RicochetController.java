@@ -4,10 +4,50 @@
  */
 package Controllers;
 
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.Slider;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.layout.Pane;
+import javafx.scene.shape.Rectangle;
+
 /**
  *
  * @author JD
  */
-public class RicochetController {
+
+
     
+
+public class RichochetController {
+    @FXML
+    Pane renderingPane;
+
+    @FXML
+    Rectangle background;
+
+    @FXML
+    Button btnStart;
+
+    @FXML
+    Button btnPause;
+
+    @FXML
+    Button btnReset;
+
+    @FXML
+    Slider SpeedOfProjectile;
+
+    @FXML
+    Slider sldAmplitude;
+    @FXML
+    Slider sldSpringConstant;
+
+    @FXML
+    ToggleButton tgbtnDampingON;
+
+    @FXML
+    ToggleButton tgbtnDampingOFF;
+
 }
+
