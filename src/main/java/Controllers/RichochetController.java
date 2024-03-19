@@ -5,8 +5,10 @@
 package Controllers;
 
 import javafx.fxml.FXML;
+import javafx.scene.chart.LineChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
+import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
@@ -15,17 +17,15 @@ import javafx.scene.shape.Rectangle;
  *
  * @author JD
  */
-
-
-    
-
 public class RichochetController {
     @FXML
     Pane renderingPane;
 
-    @FXML
-    Rectangle background;
+   // @FXML
+   // Rectangle background;
 
+    @FXML
+    SplitMenuButton DDMMaterialofWall;
     @FXML
     Button btnStart;
 
@@ -36,18 +36,25 @@ public class RichochetController {
     Button btnReset;
 
     @FXML
-    Slider SpeedOfProjectile;
+    Slider SldAngleOfWall;
 
     @FXML
-    Slider sldAmplitude;
+    Slider SlfSpeedOfProjectile;
     @FXML
-    Slider sldSpringConstant;
+    Slider sldSlfAngleofShot;
+    
+    @FXML
+    
+    Slider sldSWindressistance;
 
     @FXML
-    ToggleButton tgbtnDampingON;
+    ToggleButton BtnToggleButton;
 
-    @FXML
-    ToggleButton tgbtnDampingOFF;
-
+    @FXML 
+    LineChart GrpDistance;
+    
+     @FXML 
+    LineChart GrpSpeed;
+   // @FXML
+   // ToggleButton tgbtnDampingOFF;
 }
-
