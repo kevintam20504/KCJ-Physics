@@ -42,7 +42,7 @@ public class FXMLMainMenuController {
     void gravityOnAction(ActionEvent event) {
         try {
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            logger.info("Bootstrapping the application...");
+            logger.info("Launching Gravity Simulation");
             //-- 1) Load the scene graph from the specified FXML file and 
             // associate it with its FXML controller.
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Gravity.fxml"));
@@ -65,7 +65,7 @@ public class FXMLMainMenuController {
     void collisionOnAction(ActionEvent event) {
         try {
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            logger.info("Bootstrapping the application...");
+            logger.info("Launching Collision Simulation");
             //-- 1) Load the scene graph from the specified FXML file and 
             // associate it with its FXML controller.
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Collision.fxml"));
@@ -88,7 +88,7 @@ public class FXMLMainMenuController {
     void ricochetOnAction(ActionEvent event) {
         try {
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            logger.info("Bootstrapping the application...");
+            logger.info("Launching Ricochet Simulation");
             //-- 1) Load the scene graph from the specified FXML file and 
             // associate it with its FXML controller.
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Ricochet.fxml"));
