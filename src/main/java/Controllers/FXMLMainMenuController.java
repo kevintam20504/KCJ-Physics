@@ -52,10 +52,6 @@ public class FXMLMainMenuController {
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.sizeToScene();
-            // We just need to bring the main window to front.
-            stage.setAlwaysOnTop(true);
-            stage.show();
-            stage.setAlwaysOnTop(false);
         } catch (IOException ex) {
             logger.error(ex.getMessage(), ex);
         }
@@ -75,10 +71,7 @@ public class FXMLMainMenuController {
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.sizeToScene();
-            // We just need to bring the main window to front.
-            stage.setAlwaysOnTop(true);
-            stage.show();
-            stage.setAlwaysOnTop(false);
+            stage.centerOnScreen();
         } catch (IOException ex) {
             logger.error(ex.getMessage(), ex);
         }
@@ -98,10 +91,6 @@ public class FXMLMainMenuController {
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.sizeToScene();
-            // We just need to bring the main window to front.
-            stage.setAlwaysOnTop(true);
-            stage.show();
-            stage.setAlwaysOnTop(false);
         } catch (IOException ex) {
             logger.error(ex.getMessage(), ex);
         }

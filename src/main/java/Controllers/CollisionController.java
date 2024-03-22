@@ -41,10 +41,10 @@ public class CollisionController {
     Slider mass1Slider;
 
     @FXML
-    Slider velocity1Slider;
+    Slider mass2Slider;
 
     @FXML
-    Slider mass2Slider;
+    Slider velocity1Slider;
 
     @FXML
     Slider velocity2Slider;
@@ -56,10 +56,10 @@ public class CollisionController {
     TextField mass1Textfield;
 
     @FXML
-    TextField velocity1Textfield;
+    TextField mass2Textfield;
 
     @FXML
-    TextField mass2Textfield;
+    TextField velocity1Textfield;
 
     @FXML
     TextField velocity2Textfield;
@@ -81,14 +81,18 @@ public class CollisionController {
 
     @FXML
     public void initialize() {
-        System.out.println("wow");
+        mass1Textfield.textProperty().bind(mass1Slider.valueProperty().asString("%.0f" + "g"));
+        mass2Textfield.textProperty().bind(mass2Slider.valueProperty().asString("%.0f" + "g"));
+        velocity1Textfield.textProperty().bind(velocity1Slider.valueProperty().asString("%.0f" + "m/s"));
+        velocity2Textfield.textProperty().bind(velocity2Slider.valueProperty().asString("%.0f" + "m/s"));
+        elasticityTextfield.textProperty().bind(elasticitySlider.valueProperty().asString("%.0f"));
     }
 
     @FXML
     void exitButtonOnAction(ActionEvent event) {
         try {
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            logger.info("Launching Gravity Simulation");
+            logger.info("Exiting Collision Simulator");
             //-- 1) Load the scene graph from the specified FXML file and 
             // associate it with its FXML controller.
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainMenu.fxml"));
@@ -98,10 +102,7 @@ public class CollisionController {
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.sizeToScene();
-            // We just need to bring the main window to front.
-            stage.setAlwaysOnTop(true);
-            stage.show();
-            stage.setAlwaysOnTop(false);
+            stage.centerOnScreen();
         } catch (IOException ex) {
             logger.error(ex.getMessage(), ex);
         }
