@@ -12,8 +12,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-
-<BorderPane maxHeight="1000.0" maxWidth="1298.0" prefHeight="660.0" prefWidth="998.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="1000.0" maxWidth="1298.0" prefHeight="660.0" prefWidth="998.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <right>
       <VBox alignment="TOP_CENTER" spacing="10.0">
          <children>
@@ -29,9 +28,9 @@
             <Slider fx:id="InitialDistance" showTickLabels="true" showTickMarks="true" />
             <HBox alignment="TOP_CENTER" prefHeight="26.0" prefWidth="180.0" spacing="20.0">
                <children>
-                  <Button mnemonicParsing="false" text="Start" />
-                  <Button mnemonicParsing="false" text="Reset" />
-                  <Button mnemonicParsing="false" text="Exit" />
+                  <Button fx:id="StartBtn" mnemonicParsing="false" text="Start" />
+                  <Button fx:id="ResetBtn" mnemonicParsing="false" text="Reset" />
+                  <Button fx:id="ExitBtn" mnemonicParsing="false" text="Exit" />
                </children>
                <VBox.margin>
                   <Insets />
@@ -46,7 +45,7 @@
    <bottom>
       <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="1046.0" BorderPane.alignment="BOTTOM_CENTER">
          <children>
-            <LineChart maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" title="Speed" HBox.hgrow="ALWAYS">
+            <LineChart fx:id="SpeedChart" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" title="Speed" HBox.hgrow="ALWAYS">
               <xAxis>
                 <CategoryAxis side="BOTTOM" />
               </xAxis>
@@ -54,7 +53,7 @@
                 <NumberAxis side="LEFT" />
               </yAxis>
             </LineChart>
-            <LineChart maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" title="Distance" HBox.hgrow="ALWAYS">
+            <LineChart fx:id="DistanceChart" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" title="Distance" HBox.hgrow="ALWAYS">
               <xAxis>
                 <CategoryAxis side="BOTTOM" />
               </xAxis>
@@ -66,6 +65,6 @@
       </HBox>
    </bottom>
    <center>
-      <Pane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" BorderPane.alignment="CENTER" />
+      <Pane fx:id="AnimationPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" BorderPane.alignment="CENTER" />
    </center>
 </BorderPane>
