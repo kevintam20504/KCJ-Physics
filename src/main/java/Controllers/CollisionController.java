@@ -4,17 +4,14 @@
  */
 package Controllers;
 
-import java.io.IOException;
+import Main.MainApp;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
@@ -90,22 +87,11 @@ public class CollisionController {
 
     @FXML
     void exitButtonOnAction(ActionEvent event) {
-        try {
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            logger.info("Exiting Collision Simulator");
-            //-- 1) Load the scene graph from the specified FXML file and 
-            // associate it with its FXML controller.
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainMenu.fxml"));
-            loader.setController(new FXMLMainMenuController());
-            Pane root = loader.load();
-            //-- 2) Create and set the scene to the stage.
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.sizeToScene();
-            stage.centerOnScreen();
-        } catch (IOException ex) {
-            logger.error(ex.getMessage(), ex);
-        }
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        MainApp.switchScene("MainMenu", new FXMLMainMenuController());
+        stage.sizeToScene();
+        stage.centerOnScreen();
+        logger.info("Loaded Collision scene");
     }
 
 }

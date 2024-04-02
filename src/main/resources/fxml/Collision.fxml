@@ -18,10 +18,10 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <center>
-      <AnchorPane prefHeight="550.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="550.0" prefWidth="1600.0" BorderPane.alignment="CENTER">
          <children>
-            <Rectangle fx:id="block1" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="100.0" layoutX="285.0" layoutY="340.0" stroke="BLACK" strokeType="INSIDE" width="100.0" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="285.0" />
-            <Rectangle fx:id="block2" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="100.0" layoutX="835.0" layoutY="340.0" stroke="BLACK" strokeType="INSIDE" width="100.0" AnchorPane.bottomAnchor="60.0" AnchorPane.rightAnchor="215.0" />
+            <Rectangle fx:id="block1" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="100.0" layoutX="285.0" layoutY="340.0" stroke="BLACK" strokeType="INSIDE" width="100.0" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="300.0" />
+            <Rectangle fx:id="block2" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="100.0" layoutX="835.0" layoutY="340.0" stroke="BLACK" strokeType="INSIDE" width="100.0" AnchorPane.bottomAnchor="60.0" AnchorPane.rightAnchor="300.0" />
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#a1a4a8" height="60.0" layoutX="-32.0" layoutY="492.0" stroke="BLACK" strokeType="INSIDE" width="2056.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-32.0" AnchorPane.rightAnchor="-824.0" />
             <HBox alignment="CENTER" layoutX="450.0" layoutY="495.0" prefHeight="50.0" prefWidth="300.0" spacing="15.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="450.0" AnchorPane.rightAnchor="450.0">
                <children>
@@ -37,9 +37,9 @@
       </AnchorPane>
    </center>
    <bottom>
-      <HBox prefHeight="250.0" prefWidth="1200.0" style="-fx-border-style: solid inside; -fx-border-radius: 2; -fx-border-width: 2;" BorderPane.alignment="CENTER">
+      <HBox prefHeight="250.0" prefWidth="1600.0" style="-fx-border-style: solid inside; -fx-border-radius: 2; -fx-border-width: 2;" BorderPane.alignment="CENTER">
          <children>
-            <LineChart fx:id="block1Graph" prefHeight="233.0" prefWidth="400.0" HBox.hgrow="SOMETIMES">
+            <LineChart fx:id="block1Graph" maxHeight="-Infinity" prefHeight="250.0" prefWidth="500.0" HBox.hgrow="SOMETIMES">
               <xAxis>
                 <CategoryAxis side="BOTTOM" />
               </xAxis>
@@ -47,7 +47,7 @@
                 <NumberAxis side="LEFT" />
               </yAxis>
             </LineChart>
-            <GridPane hgap="5.0" prefWidth="400.0" vgap="5.0" HBox.hgrow="SOMETIMES">
+            <GridPane hgap="5.0" maxHeight="-Infinity" prefHeight="250.0" prefWidth="600.0" vgap="5.0" HBox.hgrow="SOMETIMES">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="99.0" minWidth="10.0" prefWidth="62.0" />
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="287.0" minWidth="10.0" prefWidth="267.0" />
@@ -84,7 +84,7 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
             </GridPane>
-            <LineChart fx:id="block2Graph" prefHeight="233.0" prefWidth="404.0" HBox.hgrow="SOMETIMES">
+            <LineChart fx:id="block2Graph" maxHeight="-Infinity" prefHeight="250.0" prefWidth="500.0" HBox.hgrow="SOMETIMES">
               <xAxis>
                 <CategoryAxis side="BOTTOM" />
               </xAxis>

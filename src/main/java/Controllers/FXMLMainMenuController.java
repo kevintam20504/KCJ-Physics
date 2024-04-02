@@ -5,14 +5,10 @@
 package Controllers;
 
 import Main.MainApp;
-import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,60 +36,30 @@ public class FXMLMainMenuController {
 
     @FXML
     void gravityOnAction(ActionEvent event) {
-        try {
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            logger.info("Launching Gravity Simulation");
-            //-- 1) Load the scene graph from the specified FXML file and 
-            // associate it with its FXML controller.
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Gravity.fxml"));
-            loader.setController(new GravityController());
-            Pane root = loader.load();
-            //-- 2) Create and set the scene to the stage.
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.sizeToScene();
-        } catch (IOException ex) {
-            logger.error(ex.getMessage(), ex);
-        }
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        MainApp.switchScene("Gravity", new GravityController());
+        stage.sizeToScene();
+        stage.centerOnScreen();
+        logger.info("Loaded Gravity scene");
+        
     }
 
     @FXML
     void collisionOnAction(ActionEvent event) {
-        try {
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            logger.info("Launching Collision Simulation");
-            //-- 1) Load the scene graph from the specified FXML file and 
-            // associate it with its FXML controller.
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Collision.fxml"));
-            loader.setController(new CollisionController());
-            Pane root = loader.load();
-            //-- 2) Create and set the scene to the stage.
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.sizeToScene();
-            stage.centerOnScreen();
-        } catch (IOException ex) {
-            logger.error(ex.getMessage(), ex);
-        }
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        MainApp.switchScene("Collision", new CollisionController());
+        stage.sizeToScene();
+        stage.centerOnScreen();
+        logger.info("Loaded Collision scene");
     }
 
     @FXML
     void ricochetOnAction(ActionEvent event) {
-        try {
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            logger.info("Launching Ricochet Simulation");
-            //-- 1) Load the scene graph from the specified FXML file and 
-            // associate it with its FXML controller.
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Ricochet.fxml"));
-            loader.setController(new RichochetController());
-            Pane root = loader.load();
-            //-- 2) Create and set the scene to the stage.
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.sizeToScene();
-        } catch (IOException ex) {
-            logger.error(ex.getMessage(), ex);
-        }
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        MainApp.switchScene("Richochet", new RichochetController());
+        stage.sizeToScene();
+        stage.centerOnScreen();
+        logger.info("Loaded Richochet scene");
     }
 
 }
