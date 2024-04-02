@@ -5,6 +5,7 @@
 package Controllers;
 
 import Main.MainApp;
+import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -14,6 +15,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,6 +77,12 @@ public class CollisionController {
 
     @FXML
     LineChart block2Graph;
+    
+    @FXML
+    TextField xValue;
+    
+    @FXML
+    TextField yValue;
 
     @FXML
     public void initialize() {
@@ -83,6 +91,23 @@ public class CollisionController {
         velocity1Textfield.textProperty().bind(velocity1Slider.valueProperty().asString("%.0f" + "m/s"));
         velocity2Textfield.textProperty().bind(velocity2Slider.valueProperty().asString("%.0f" + "m/s"));
         elasticityTextfield.textProperty().bind(elasticitySlider.valueProperty().asString("%.0f"));
+//        TranslateTransition tt1 = new TranslateTransition(Duration.millis(2500), block1);
+//        TranslateTransition tt2 = new TranslateTransition(Duration.millis(2500), block1);
+//        tt1.setFromX(0);
+//        tt1.setToX(300);
+//        tt2.setFromX(300);
+//        tt2.setToX(0);
+//        tt1.play();
+//        tt1.setOnFinished(e->{
+//            tt2.play();
+//        });
+
+        //for testing purposes
+        MainApp.scene.setOnMouseMoved(e -> {
+            xValue.setText("x: " + e.getX());
+            yValue.setText("y: " + e.getY());
+        });
+
     }
 
     @FXML

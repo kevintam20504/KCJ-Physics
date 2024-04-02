@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 public class MainApp extends Application {
 
     private final static Logger logger = LoggerFactory.getLogger(MainApp.class);
-    private static Scene scene;
+    public static Scene scene;
 
     @Override
     public void start(Stage primaryStage) {
