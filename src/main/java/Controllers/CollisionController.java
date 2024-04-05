@@ -5,6 +5,7 @@
 package Controllers;
 
 import Main.MainApp;
+import javafx.animation.PathTransition;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,6 +14,10 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -26,6 +31,9 @@ import org.slf4j.LoggerFactory;
 public class CollisionController {
 
     private final static Logger logger = LoggerFactory.getLogger(CollisionController.class);
+
+    @FXML
+    BorderPane borderPane;
 
     @FXML
     Button resetButton;
@@ -77,31 +85,36 @@ public class CollisionController {
 
     @FXML
     LineChart block2Graph;
-    
+
     @FXML
     TextField xValue;
-    
+
     @FXML
     TextField yValue;
 
     @FXML
     public void initialize() {
+        //shows the slider values on the textfields
         mass1Textfield.textProperty().bind(mass1Slider.valueProperty().asString("%.0f" + "g"));
         mass2Textfield.textProperty().bind(mass2Slider.valueProperty().asString("%.0f" + "g"));
         velocity1Textfield.textProperty().bind(velocity1Slider.valueProperty().asString("%.0f" + "m/s"));
         velocity2Textfield.textProperty().bind(velocity2Slider.valueProperty().asString("%.0f" + "m/s"));
         elasticityTextfield.textProperty().bind(elasticitySlider.valueProperty().asString("%.0f"));
-//        TranslateTransition tt1 = new TranslateTransition(Duration.millis(2500), block1);
-//        TranslateTransition tt2 = new TranslateTransition(Duration.millis(2500), block1);
-//        tt1.setFromX(0);
-//        tt1.setToX(300);
-//        tt2.setFromX(300);
-//        tt2.setToX(0);
-//        tt1.play();
-//        tt1.setOnFinished(e->{
-//            tt2.play();
-//        });
+        
+        borderPane.widthProperty().addListener((obs, oldVal, newVal) -> {
+            System.out.println(newVal);
+        });
 
+        System.out.println(block1.getLayoutX());
+        System.out.println(block2.getLayoutX());
+
+//        Path path = new Path();
+//        path.getElements().add(new MoveTo(0f,0f));
+//        path.getElements().add(new LineTo(800f,0f));
+//        path.getElements().add(new LineTo(100,0));
+//        PathTransition pt = new PathTransition(Duration.seconds(2),path, block1);
+//        pt.setCycleCount(1);
+//        pt.play();
         //for testing purposes
         MainApp.scene.setOnMouseMoved(e -> {
             xValue.setText("x: " + e.getX());
@@ -116,7 +129,7 @@ public class CollisionController {
         MainApp.switchScene("MainMenu", new FXMLMainMenuController());
         stage.sizeToScene();
         stage.centerOnScreen();
-        logger.info("Loaded Collision scene");
+        logger.info("Exited Collision scene");
     }
 
 }

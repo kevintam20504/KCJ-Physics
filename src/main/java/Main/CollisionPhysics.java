@@ -11,15 +11,16 @@ package Main;
 public class CollisionPhysics {
 
     //distance between blocks in meters. note the scale is 1m=100pixels
-    private static final double DISTANCE = 8;
-    private double mass1 = 0;
-    private double mass2 = 0;
-    private double velocity1 = 0;
-    private double velocity2 = 0;
-    private double elasticity = 0;
+    private static double distance;
+    private double mass1;
+    private double mass2;
+    private double velocity1;
+    private double velocity2;
+    private double elasticity;
+    private double momentum = (mass1 * velocity1) + (mass2 * velocity2);
 
     private double getCollisionTime() {
-        double time = DISTANCE / (this.velocity1 + this.velocity2);
+        double time = distance / (this.velocity1 + this.velocity2);
         return time;
     }
 
@@ -32,13 +33,31 @@ public class CollisionPhysics {
         double distance = this.velocity2 * getCollisionTime();
         return distance;
     }
-    
-    private double getVelocity1(){
-       return 0; 
+
+    private double getVelocity1() {
+        double velocity = 0;
+        if (this.elasticity == 0) {
+            velocity = this.momentum / (mass1 + mass2);
+            return velocity;
+        } else if (this.elasticity == 1) {
+
+        } else {
+
+        }
+        return velocity;
     }
-    
-    private double getVelocity2(){
-        return 0;
+
+    private double getVelocity2() {
+        double velocity = 0;
+        if (this.elasticity == 0) {
+            velocity = this.momentum / (mass1 + mass2);
+            return velocity;
+        } else if (this.elasticity == 1) {
+
+        } else {
+
+        }
+        return velocity;
     }
 
 }
