@@ -5,6 +5,8 @@
 package Controllers;
 
 import Main.MainApp;
+import Main.CollisionPhysics;
+import javafx.animation.Animation;
 import javafx.animation.PathTransition;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
@@ -92,6 +94,8 @@ public class CollisionController {
     @FXML
     TextField yValue;
 
+    PathTransition pt = new PathTransition();
+
     @FXML
     public void initialize() {
         //shows the slider values on the textfields
@@ -100,27 +104,61 @@ public class CollisionController {
         velocity1Textfield.textProperty().bind(velocity1Slider.valueProperty().asString("%.0f" + "m/s"));
         velocity2Textfield.textProperty().bind(velocity2Slider.valueProperty().asString("%.0f" + "m/s"));
         elasticityTextfield.textProperty().bind(elasticitySlider.valueProperty().asString("%.0f"));
+
+        CollisionPhysics physics = new CollisionPhysics();
         
-        borderPane.widthProperty().addListener((obs, oldVal, newVal) -> {
-            System.out.println(newVal);
+        //for testing
+        CollisionPhysics p = new CollisionPhysics(10, 3, 20, -5, 1);
+        CollisionPhysics.setDistance(8);
+        System.out.println("vel1: " + p.getVelocity1());
+        System.out.println("vel2: " + p.getVelocity2());
+
+        //detects if if width of window changes to change the appropriate distance between blocks
+        borderPane.widthProperty().addListener((observable, oldValue, newValue) -> {
+            CollisionPhysics.setDistance(block2.getLayoutX() - (block1.getLayoutX() + 100));
+            System.out.println("distance: " + CollisionPhysics.getDistance());
+            System.out.println("block1X: " + block1.getLayoutX());
+            System.out.println("block2X: " + block2.getLayoutX());
         });
 
-        System.out.println(block1.getLayoutX());
-        System.out.println(block2.getLayoutX());
+        drawAnimation();
 
-//        Path path = new Path();
-//        path.getElements().add(new MoveTo(0f,0f));
-//        path.getElements().add(new LineTo(800f,0f));
-//        path.getElements().add(new LineTo(100,0));
-//        PathTransition pt = new PathTransition(Duration.seconds(2),path, block1);
-//        pt.setCycleCount(1);
-//        pt.play();
         //for testing purposes
         MainApp.scene.setOnMouseMoved(e -> {
             xValue.setText("x: " + e.getX());
             yValue.setText("y: " + e.getY());
         });
 
+    }
+
+    public void drawAnimation() {
+        //note: to look into: cue points
+        Path path = new Path();
+        path.getElements().add(new MoveTo(0, 0));
+        path.getElements().add(new LineTo(400, 0));
+       // path.getElements().add(new LineTo(0, 0));
+        pt.setDuration(Duration.seconds(2));
+        pt.setPath(path);
+        pt.setNode(block1);
+        pt.setCycleCount(1);
+    }
+
+    @FXML
+    void startStopButtonOnAction(ActionEvent event) {
+        if (pt.getStatus() == PathTransition.Status.RUNNING) {
+            pt.pause();
+            logger.info("Pausing Collision Animation");
+        } else {
+            pt.play();
+            logger.info("Playing Collision Animation");
+        }
+    }
+
+    @FXML
+    void resetButtonOnAction(ActionEvent event) {
+        pt.jumpTo(Duration.ZERO);
+        pt.stop();
+        logger.info("Resetting Collision Animation");
     }
 
     @FXML

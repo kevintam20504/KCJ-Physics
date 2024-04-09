@@ -12,8 +12,8 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Text?>
@@ -30,15 +30,14 @@
       </AnchorPane>
    </center>
    <bottom>
-      <VBox BorderPane.alignment="CENTER">
+      <VBox style="-fx-border-style: solid inside; -fx-border-width: 2; -fx-border-radius: 2;" BorderPane.alignment="CENTER">
          <children>
-            <Pane prefHeight="50.0" prefWidth="1600.0">
+            <StackPane prefHeight="50.0" prefWidth="1600.0">
                <children>
-                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#a1a4a8" height="50.0" stroke="BLACK" strokeType="INSIDE" width="2001.0" />
-                  <HBox alignment="CENTER" layoutX="650.0" prefHeight="50.0" prefWidth="300.0" spacing="15.0">
+                  <HBox alignment="CENTER" prefHeight="50.0" prefWidth="300.0" spacing="15.0" style="-fx-background-color: grey;">
                      <children>
-                        <Button fx:id="resetButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="77.0" text="Reset" />
-                        <Button fx:id="startStopButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="77.0" text="Start/Stop" />
+                        <Button fx:id="resetButton" mnemonicParsing="false" onAction="#resetButtonOnAction" prefHeight="30.0" prefWidth="77.0" text="Reset" />
+                        <Button fx:id="startStopButton" mnemonicParsing="false" onAction="#startStopButtonOnAction" prefHeight="30.0" prefWidth="77.0" text="Start/Stop" />
                         <Button fx:id="exitButton" mnemonicParsing="false" onAction="#exitButtonOnAction" prefHeight="30.0" prefWidth="77.0" text="Exit" />
                      </children>
                      <padding>
@@ -46,7 +45,7 @@
                      </padding>
                   </HBox>
                </children>
-            </Pane>
+            </StackPane>
             <HBox prefHeight="250.0" prefWidth="1600.0" style="-fx-border-style: solid inside; -fx-border-radius: 2; -fx-border-width: 2;">
                <children>
                   <LineChart fx:id="block1Graph" maxHeight="-Infinity" prefHeight="250.0" prefWidth="500.0" HBox.hgrow="SOMETIMES">
