@@ -4,6 +4,7 @@
  */
 package Controllers;
 
+import Models.Ball;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.control.Button;
@@ -55,6 +56,13 @@ public class RichochetController {
     
      @FXML 
     LineChart GrpSpeed;
+     
+         @FXML 
+    Pane Paneforscene;
    // @FXML
    // ToggleButton tgbtnDampingOFF;
+         
+         
+         
+   
 }
