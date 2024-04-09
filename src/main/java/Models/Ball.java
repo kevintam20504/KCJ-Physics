@@ -33,7 +33,9 @@ public class Ball {
         this.velocity = velocity;
         this.color = color;
     }
-    
+    public Ball(){
+        
+    }
     public void setY(double y) {
         this.y = y;
     }
