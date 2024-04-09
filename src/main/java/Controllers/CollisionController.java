@@ -6,9 +6,7 @@ package Controllers;
 
 import Main.MainApp;
 import Main.CollisionPhysics;
-import javafx.animation.Animation;
 import javafx.animation.PathTransition;
-import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -18,7 +16,6 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.shape.HLineTo;
-import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
@@ -118,39 +115,40 @@ public class CollisionController {
         velocity2Textfield.textProperty().bind(velocity2Slider.valueProperty().asString("%.1f" + "m/s"));
         elasticityTextfield.textProperty().bind(elasticitySlider.valueProperty().asString("%.0f" + "%%"));
 
+        //checks the slider value after changing and updates the physics for these values
         mass1Slider.setOnMouseReleased(e -> {
-            System.out.println(Math.round(mass1Slider.getValue()));
+            physics.setMass1(Math.round(mass1Slider.getValue()));
         });
         mass1Slider.setOnKeyReleased(e -> {
-            System.out.println(Math.round(mass1Slider.getValue()));
+            physics.setMass1(Math.round(mass1Slider.getValue()));
         });
-        
+
         velocity1Slider.setOnMouseReleased(e -> {
-            System.out.println(Math.round(velocity1Slider.getValue()*10)/10);
+            physics.setVelocity1(Math.round(velocity1Slider.getValue() * 10) / 10.0);
         });
         velocity1Slider.setOnKeyReleased(e -> {
-            System.out.println(Math.round(velocity1Slider.getValue()*10));
+            physics.setVelocity1(Math.round(velocity1Slider.getValue() * 10) / 10.0);
         });
-        
+
         mass2Slider.setOnMouseReleased(e -> {
-            System.out.println(Math.round(mass2Slider.getValue()));
+            physics.setMass2(Math.round(mass2Slider.getValue()));
         });
         mass2Slider.setOnKeyReleased(e -> {
-            System.out.println(Math.round(mass2Slider.getValue()));
+            physics.setMass2(Math.round(mass2Slider.getValue()));
         });
-        
+
         velocity2Slider.setOnMouseReleased(e -> {
-            System.out.println(Math.round(velocity2Slider.getValue()));
+            physics.setVelocity2(Math.round(velocity2Slider.getValue() * 10) / 10.0);
         });
         velocity2Slider.setOnKeyReleased(e -> {
-            System.out.println(Math.round(velocity2Slider.getValue()));
+            physics.setVelocity2(Math.round(velocity2Slider.getValue() * 10) / 10.0);
         });
-        
+
         elasticitySlider.setOnMouseReleased(e -> {
-            System.out.println(Math.round(elasticitySlider.getValue()));
+            physics.setElasticity(Math.round(elasticitySlider.getValue()));
         });
         elasticitySlider.setOnKeyReleased(e -> {
-            System.out.println(Math.round(elasticitySlider.getValue()));
+            physics.setElasticity(Math.round(elasticitySlider.getValue()));
         });
 
         //for testing purposes
@@ -161,6 +159,7 @@ public class CollisionController {
 
     }
 
+    //creates the animation
     public void drawAnimation() {
         //note: to look into: cue points
         Path path1 = new Path();
@@ -182,6 +181,7 @@ public class CollisionController {
         block2PathTransition.setCycleCount(1);
     }
 
+    //if animation is running it pauses, otherwise it plays the animation
     @FXML
     void startStopButtonOnAction(ActionEvent event) {
         if (block1PathTransition.getStatus() == PathTransition.Status.RUNNING) {
@@ -196,6 +196,7 @@ public class CollisionController {
         }
     }
 
+    //resets the animation
     @FXML
     void resetButtonOnAction(ActionEvent event) {
         block1PathTransition.jumpTo(Duration.ZERO);
@@ -205,6 +206,7 @@ public class CollisionController {
         logger.info("Resetting Collision Animation");
     }
 
+    //exits the simulation
     @FXML
     void exitButtonOnAction(ActionEvent event) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

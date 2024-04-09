@@ -53,7 +53,7 @@ public class CollisionPhysics {
             velocity = momentum / (mass1 + mass2);
             return velocity;
         } else if (elasticity == 1) {
-            velocity = ((mass1*velocity1)+(2*mass2*velocity2)-(mass2*velocity1))/(mass1+mass2);
+            velocity = ((mass1 * velocity1) + (2 * mass2 * velocity2) - (mass2 * velocity1)) / (mass1 + mass2);
         } else {
 
         }
@@ -66,7 +66,7 @@ public class CollisionPhysics {
             velocity = momentum / (mass1 + mass2);
             return velocity;
         } else if (elasticity == 1) {
-            velocity = ((2*mass1*velocity1)+(mass2*velocity2)-(mass1*velocity2))/(mass1+mass2);
+            velocity = ((2 * mass1 * velocity1) + (mass2 * velocity2) - (mass1 * velocity2)) / (mass1 + mass2);
         } else {
 
         }
@@ -96,6 +96,14 @@ public class CollisionPhysics {
 
     public void setMass2(double mass2) {
         this.mass2 = mass2;
+    }
+
+    public void setVelocity1(double velocity1) {
+        this.velocity1 = velocity1;
+    }
+
+    public void setVelocity2(double velocity2) {
+        this.velocity2 = velocity2;
     }
 
     public double getElasticity() {
