@@ -12,7 +12,6 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="750.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <right>
       <VBox alignment="TOP_CENTER" spacing="30.0">
@@ -29,9 +28,9 @@
             <Slider fx:id="InitialDistance" showTickLabels="true" showTickMarks="true" />
             <HBox alignment="TOP_CENTER" prefHeight="26.0" prefWidth="180.0" spacing="20.0">
                <children>
-                  <Button fx:id="StartBtn" mnemonicParsing="false" onAction="handleStartBtnAction" text="Start" />
+                  <Button fx:id="StartBtn" mnemonicParsing="false" onAction="#handleStartBtnAction" text="Start" />
                   <Button fx:id="ResetBtn" mnemonicParsing="false" text="Reset" />
-                  <Button fx:id="ExitBtn" mnemonicParsing="false" onAction="handleExitBtnAction" text="Exit" />
+                  <Button fx:id="ExitBtn" mnemonicParsing="false" onAction="#handleExitBtnAction" text="Exit" />
                </children>
                <VBox.margin>
                   <Insets />
