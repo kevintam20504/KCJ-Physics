@@ -48,7 +48,7 @@
             </StackPane>
             <HBox prefHeight="250.0" prefWidth="1600.0">
                <children>
-                  <LineChart fx:id="block1Graph" maxHeight="-Infinity" prefHeight="250.0" prefWidth="500.0" HBox.hgrow="SOMETIMES">
+                  <LineChart fx:id="block1Graph" maxHeight="-Infinity" prefHeight="250.0" prefWidth="550.0" HBox.hgrow="SOMETIMES">
                     <xAxis>
                       <CategoryAxis side="BOTTOM" />
                     </xAxis>
@@ -56,7 +56,7 @@
                       <NumberAxis side="LEFT" />
                     </yAxis>
                   </LineChart>
-                  <GridPane hgap="5.0" maxHeight="-Infinity" prefHeight="250.0" prefWidth="600.0" vgap="5.0" HBox.hgrow="SOMETIMES">
+                  <GridPane hgap="5.0" maxHeight="-Infinity" prefHeight="250.0" prefWidth="500.0" vgap="5.0" HBox.hgrow="SOMETIMES">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="99.0" minWidth="10.0" prefWidth="62.0" />
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="287.0" minWidth="10.0" prefWidth="267.0" />
@@ -93,7 +93,7 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
                   </GridPane>
-                  <LineChart fx:id="block2Graph" maxHeight="-Infinity" prefHeight="250.0" prefWidth="500.0" HBox.hgrow="SOMETIMES">
+                  <LineChart fx:id="block2Graph" maxHeight="-Infinity" prefHeight="250.0" prefWidth="550.0" HBox.hgrow="SOMETIMES">
                     <xAxis>
                       <CategoryAxis side="BOTTOM" />
                     </xAxis>

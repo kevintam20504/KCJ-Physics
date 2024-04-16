@@ -55,8 +55,9 @@ public class CollisionPhysics {
             return velocity;
         } else if (elasticity == 1) {
             velocity = ((mass1 * velocity1) + (2 * mass2 * velocity2) - (mass2 * velocity1)) / (mass1 + mass2);
-        } else {
-            //TODO 0<elasticity<1
+        } else if (elasticity > 0 && elasticity < 1) {
+            //https://physics.stackexchange.com/questions/660602/how-is-partial-elasticity-calculated
+            velocity = (elasticity * mass2 * velocity2 - elasticity * mass2 * velocity1 + mass1 * velocity1 + mass2 * velocity2) / (mass1 + mass2);
         }
         return velocity;
     }
@@ -69,8 +70,9 @@ public class CollisionPhysics {
             return velocity;
         } else if (elasticity == 1) {
             velocity = ((2 * mass1 * velocity1) + (mass2 * velocity2) - (mass1 * velocity2)) / (mass1 + mass2);
-        } else {
-            //TODO 0<elasticity<1
+        } else if (elasticity > 0 && elasticity < 1) {
+            //https://physics.stackexchange.com/questions/660602/how-is-partial-elasticity-calculated
+            velocity = (elasticity * mass1 * velocity1 - elasticity * mass1 * velocity2 + mass1 * velocity1 + mass2 * velocity2) / (mass1 + mass2);
         }
         return velocity;
     }

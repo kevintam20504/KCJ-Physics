@@ -50,6 +50,8 @@ public class FXMLMainMenuController {
         MainApp.switchScene("Collision", new CollisionController());
         stage.sizeToScene();
         stage.centerOnScreen();
+        stage.setMinWidth(1000);
+        stage.setMinHeight(500);
         logger.info("Loaded Collision scene");
     }
 

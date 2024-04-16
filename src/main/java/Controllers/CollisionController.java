@@ -6,6 +6,7 @@ package Controllers;
 
 import Main.MainApp;
 import Main.CollisionPhysics;
+import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
@@ -149,35 +150,8 @@ public class CollisionController {
             xValue.setText("x: " + e.getX());
             yValue.setText("y: " + e.getY());
         });
-
     }
 
-    //creates the animation
-//    public void drawAnimation() {
-//        System.out.println(physics);
-//        //note: to look into: cue points
-//        Path path1 = new Path();
-//        path1.getElements().add(new MoveTo(0, 0));
-//        path1.getElements().add(new HLineTo(physics.getBlock1DistanceTravelled() * 100));
-//        //path1.getElements().add(new HLineTo(-500));
-//        //block1PathTransition.setDuration(Duration.seconds(physics.getCollisionTime()));
-//        block1PathTransition.setDuration(Duration.seconds(2));
-//        block1PathTransition.setPath(path1);
-//        block1PathTransition.setNode(block1);
-//        block1PathTransition.setCycleCount(1);
-//        
-//
-//        Path path2 = new Path();
-//        path2.getElements().add(new MoveTo(0, 0));
-//        path2.getElements().add(new HLineTo(-physics.getBlock2DistanceTravelled() * 100));
-//        //path2.getElements().add(new HLineTo(500));
-//        //block2PathTransition.setDuration(Duration.seconds(physics.getCollisionTime()));
-//        block2PathTransition.setDuration(Duration.seconds(6));
-//        block2PathTransition.setPath(path2);
-//        block2PathTransition.setNode(block2);
-//        block2PathTransition.setCycleCount(1);
-//        block2PathTransition.setRate(3);
-//    }
     //creates the animation
     //https://docs.oracle.com/javase/8/javafx/api/javafx/animation/SequentialTransition.html
     //https://openjfx.io/javadoc/14/javafx.graphics/javafx/animation/Transition.html#interpolatorProperty
@@ -244,50 +218,40 @@ public class CollisionController {
         block2Transition.getChildren().addAll(b2BeforeCollsion, b2AfterCollision);
     }
 
-//    public void drawAnimation() {
-//        System.out.println(physics);
-//        block1Transition.setCycleCount(1);
-//        block2Transition.setCycleCount(1);
-//
-//        TranslateTransition tt1 = new TranslateTransition(Duration.seconds(physics.getCollisionTime()), block1);
-//        TranslateTransition tt2 = new TranslateTransition(Duration.seconds((physics.getBlock1DistanceTravelled() + 3) / Math.abs(physics.getVelocity1Final())), block1);
-//        tt1.setInterpolator(Interpolator.LINEAR);
-//        tt2.setInterpolator(Interpolator.LINEAR);
-//
-//        tt1.setFromX(0);//from start of block1
-//        tt1.setToX(physics.getBlock1DistanceTravelled() * 100);//to point of collision
-//        tt2.setFromX(physics.getBlock1DistanceTravelled() * 100);//from point of collision
-//        tt2.setToX(-300);
-//
-//        TranslateTransition tt3 = new TranslateTransition(Duration.seconds(physics.getCollisionTime()), block2);
-//        TranslateTransition tt4 = new TranslateTransition(Duration.seconds((physics.getBlock2DistanceTravelled() + 3) / Math.abs(physics.getVelocity2Final())), block2);
-//        tt3.setInterpolator(Interpolator.LINEAR);
-//        tt4.setInterpolator(Interpolator.LINEAR);
-//
-//        tt3.setFromX(0);
-//        tt3.setToX(-physics.getBlock2DistanceTravelled() * 100);
-//        tt4.setFromX(-physics.getBlock2DistanceTravelled() * 100);
-//        tt4.setToX(300);
-//
-//        block1Transition.getChildren().clear();
-//        block2Transition.getChildren().clear();
-//        block1Transition.getChildren().addAll(tt1, tt2);
-//        block2Transition.getChildren().addAll(tt3, tt4);
-//    }
     //if animation is running it pauses, otherwise it plays the animation
     @FXML
     void startStopButtonOnAction(ActionEvent event) {
-        drawAnimation();
-        if (block1Transition.getStatus().equals(Transition.Status.RUNNING) || block2Transition.getStatus().equals(Transition.Status.RUNNING)) {
+        boolean isPaused1 = block1Transition.getStatus().equals(Transition.Status.PAUSED);
+        boolean isAtStart1 = block1Transition.getCurrentTime().equals(Duration.ZERO);
+        boolean isPaused2 = block2Transition.getStatus().equals(Transition.Status.PAUSED);
+        boolean isAtStart2 = block2Transition.getCurrentTime().equals(Duration.ZERO);
+        boolean isRunning = block1Transition.getStatus().equals(Transition.Status.RUNNING) || block2Transition.getStatus().equals(Transition.Status.RUNNING);
+
+        if (isRunning) {
             block1Transition.pause();
             block2Transition.pause();
             logger.info("Pausing Collision Animation");
         } else {
-            if (block1Transition.getStatus().equals(Transition.Status.PAUSED) || block1Transition.getCurrentTime().equals(Duration.ZERO)) {
+
+            if (isAtStart1 && isAtStart2) {
+                drawAnimation();//creates animation
+
+                //disables sliders when animation starts
+                mass1Slider.setDisable(true);
+                velocity1Slider.setDisable(true);
+                mass2Slider.setDisable(true);
+                velocity2Slider.setDisable(true);
+                elasticitySlider.setDisable(true);
+
+                //disables resizing window
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                stage.setResizable(false);
+            }
+            if (isPaused1 || isAtStart1) {
                 block1Transition.play();
                 logger.info("Playing block1 Collision Animation");
             }
-            if (block2Transition.getStatus().equals(Transition.Status.PAUSED) || block2Transition.getCurrentTime().equals(Duration.ZERO)) {
+            if (isPaused2 || isAtStart2) {
                 block2Transition.play();
                 logger.info("Playing block2 Collision Animation");
             }
@@ -301,6 +265,18 @@ public class CollisionController {
         block2Transition.playFromStart();
         block1Transition.stop();
         block2Transition.stop();
+
+        //enables sliders to be adjusted
+        mass1Slider.setDisable(false);
+        velocity1Slider.setDisable(false);
+        mass2Slider.setDisable(false);
+        velocity2Slider.setDisable(false);
+        elasticitySlider.setDisable(false);
+
+        //enables resizing window
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setResizable(true);
+
         logger.info("Resetting Collision Animation");
     }
 
@@ -311,7 +287,10 @@ public class CollisionController {
         MainApp.switchScene("MainMenu", new FXMLMainMenuController());
         stage.sizeToScene();
         stage.centerOnScreen();
+        
+        //enables resizing window
+        stage.setResizable(true);
+        
         logger.info("Exited Collision scene");
     }
-
 }
