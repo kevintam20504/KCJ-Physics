@@ -91,9 +91,9 @@ private Line wall;
    @FXML
 public void initialize() {
     createBall();
-    createWall();
+    //createWall();
     //setupButtonHandler();
-    // BtnStart.setOnAction(event -> startAnimation());
+     Wanderstellen();
     // initEventHandlers();
     startBallMovement();  
            
@@ -102,24 +102,29 @@ private void createBall() {
     // Create the ball
     ball = new Circle(10);
     ball.setLayoutX(50); 
-    ball.setLayoutY(50); 
-
-
+    ball.setLayoutY(300); 
     Paneforscene.getChildren().add(ball);
 }
 
-private void createWall() {
 
-  double centerX = Paneforscene.getWidth() / 2;
-    double centerY = Paneforscene.getHeight() / 2;
-    double wallLength = 200; 
+private Line slantedWall;
+ private double wallAngle = 120;  
+private void Wanderstellen(){
 
-    wall = new Line(centerX - (wallLength / 2), centerY, centerX + (wallLength / 2), centerY);
-    wall.setStroke(Color.BLACK);
-    wall.setStrokeWidth(10);
+double centerX = 200+Paneforscene.getWidth() ;
+        double centerY = 300;
 
-    Paneforscene.getChildren().add(wall);
+        slantedWall = new Line(centerX - 100, centerY, centerX + 100, centerY);
+        slantedWall.setStroke(Color.BLACK);
+        Rotate rotateWall = new Rotate(wallAngle, centerX, centerY);
+      //  Rotate rotateBall = new Rotate(0, centerX, centerY);
+
+        slantedWall.getTransforms().add(rotateWall);
+ Paneforscene.getChildren().add(slantedWall);
 }
+
+
+
 
 
 private void startBallMovement() {
@@ -130,19 +135,19 @@ private void startBallMovement() {
     animationTimer = new AnimationTimer() {
         @Override
         public void handle(long now) {
-            // Move the ball
+        
             ball.setLayoutX(ball.getLayoutX() + velocityX);
             ball.setLayoutY(ball.getLayoutY() + velocityY);
 
-            // Check for collision with the wall
-            if (ball.getBoundsInParent().intersects(wall.getBoundsInParent())) {
-                // Calculate new angle based on the wall angle
+        
+            if (ball.getBoundsInParent().intersects(slantedWall.getBoundsInParent())) {
+               
                 double wallAngle = Math.toRadians(SldWallAngle.getValue());
                 double newAngle = wallAngle * 2;
-
-                // Calculate new velocity components based on the new angle
-                velocityX = Math.cos(newAngle) * SlfSpeedOfProjectile.getValue();
-                velocityY = Math.sin(newAngle) * SlfSpeedOfProjectile.getValue();
+                velocityX = Math.cos(newAngle) * 10;
+                velocityY =Math.cos(newAngle) * 10;
+                //velocityX = Math.cos(newAngle) * SlfSpeedOfProjectile.getValue();
+                //velocityY = Math.sin(newAngle) * SlfSpeedOfProjectile.getValue();
             }
         }
     };
