@@ -55,7 +55,7 @@ public class RichochetController {
     Button btnReset;
 
       @FXML
-    Slider  SldWallAngle;
+    Slider  SldWallAngle ;
     @FXML
     Slider SldAngleOfWall;
 
@@ -107,47 +107,37 @@ private void createBall() {
 }
 
 
-private Line slantedWall;
- private double wallAngle = 120;  
+
+ private Line slantedWall;
+private final double wallAngle = 200; 
+
 private void Wanderstellen(){
+    double centerX = 200 + Paneforscene.getWidth();
+    double centerY = 300;
 
-double centerX = 200+Paneforscene.getWidth() ;
-        double centerY = 300;
+    slantedWall = new Line(centerX - 100, centerY, centerX + 100, centerY);
+    slantedWall.setStroke(Color.BLACK);
+    Rotate rotateWall = new Rotate(wallAngle, centerX, centerY);
+    slantedWall.getTransforms().add(rotateWall);
 
-        slantedWall = new Line(centerX - 100, centerY, centerX + 100, centerY);
-        slantedWall.setStroke(Color.BLACK);
-        Rotate rotateWall = new Rotate(wallAngle, centerX, centerY);
-      //  Rotate rotateBall = new Rotate(0, centerX, centerY);
-
-        slantedWall.getTransforms().add(rotateWall);
- Paneforscene.getChildren().add(slantedWall);
+    Paneforscene.getChildren().add(slantedWall);
 }
 
-
-
-
-
 private void startBallMovement() {
-    // Set initial speed of the ball to 10
     velocityX = 10;
     velocityY = 0;
 
     animationTimer = new AnimationTimer() {
         @Override
         public void handle(long now) {
-        
             ball.setLayoutX(ball.getLayoutX() + velocityX);
             ball.setLayoutY(ball.getLayoutY() + velocityY);
 
-        
             if (ball.getBoundsInParent().intersects(slantedWall.getBoundsInParent())) {
-               
-                double wallAngle = Math.toRadians(SldWallAngle.getValue());
-                double newAngle = wallAngle * 2;
+                double wallAngleRadians = Math.toRadians(wallAngle); 
+                double newAngle = wallAngleRadians * 2;
                 velocityX = Math.cos(newAngle) * 10;
-                velocityY =Math.cos(newAngle) * 10;
-                //velocityX = Math.cos(newAngle) * SlfSpeedOfProjectile.getValue();
-                //velocityY = Math.sin(newAngle) * SlfSpeedOfProjectile.getValue();
+                velocityY = Math.sin(newAngle) * 10; 
             }
         }
     };
@@ -156,128 +146,5 @@ private void startBallMovement() {
 
 
 
-
 }
-
-
-/*
-private double initialSpeed = 50;
-private double wallAngleDegrees = 45;
-private void startAnimation() {
-    velocityX = initialSpeed; 
-    velocityY = 0; 
-
-    animationTimer = new AnimationTimer() {
-        @Override
-        public void handle(long now) {
-            updateBallPosition();
-        }
-    };
-    animationTimer.start();
-}
-
-private void updateBallPosition() {
-    ball.setLayoutX(ball.getLayoutX() + velocityX);
-    if (ball.getLayoutX() >= wall.getStartX() - ball.getRadius()) {
-        handleCollision();
-    }
-}
-
-private void handleCollision() {
-    // Stop the ball or reverse direction, handle as per requirement
-    velocityX = 0; // Stop the ball for simplicity, or reverse it as needed
-}
-
-//public void initEventHandlers(){
-//btnStart.setOnAction(event -> startAnimation());
-
-//}
-
-/*
-    private void startAnimation() {
-       
-        renderingPane.sceneProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                startAnimationAfterSceneInitialized();
-            }
-        });
-    }
-
-    private void startAnimationAfterSceneInitialized() {
-       
-        animationTimer = new AnimationTimer() {
-        @Override
-        public void handle(long now) {
-           
-            ball.setLayoutX(ball.getLayoutX() + velocityX);
-            ball.setLayoutY(ball.getLayoutY() + velocityY);
-
-          
-            velocityY += accelerationY;
-
-            
-            if (ball.getLayoutX() >= wall.getStartX() - ball.getRadius()) {
-                double wallAngleDeg = SldWallAngle.getValue(); 
-                double reboundAngleDeg = 2 * wallAngleDeg;
-                double reboundAngleRad = Math.toRadians(reboundAngleDeg);
-
-              
-                velocityX = -Math.abs(velocityX) * Math.cos(reboundAngleRad); 
-                velocityY = -Math.abs(velocityY) * Math.sin(reboundAngleRad); 
-
-            
-                ball.setLayoutX(wall.getStartX() - ball.getRadius());
-            }
-
-           
-            if (ball.getLayoutY() >= Paneforscene.getHeight() - ball.getRadius()) {
-                velocityY *= -0.8;
-                ball.setLayoutY(Paneforscene.getHeight() - ball.getRadius());
-            }
-        }
-    };
-
-  
-    animationTimer.start();
-    }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
- 
-    private void setupButtonHandler() {
-    btnStart.setOnAction(event -> startAnimation());
-    btnPause.setOnAction(event -> toggleAnimation());
-    btnReset.setOnAction(event -> resetAnimation());
-}
-
-private void toggleAnimation() {
-    if (animationTimer != null) {
-        if (BtnToggleButton.isSelected()) {
-            animationTimer.stop();
-        } else {
-            animationTimer.start();
-        }
-    }
-}
-
-private void resetAnimation() {
-    if (animationTimer != null) {
-        animationTimer.stop();
-    }
-    ball.setLayoutX(50);
-    ball.setLayoutY(50);
-    velocityX = 2;
-    velocityY = 0;
-}
-   */
 
