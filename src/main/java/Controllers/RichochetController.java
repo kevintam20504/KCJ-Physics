@@ -40,7 +40,7 @@ public class RichochetController {
    // Rectangle background;
 
     @FXML
-    SplitMenuButton DDMMaterialofWall;
+    SplitMenuButton BtnWallMeterial;
     
     @FXML
     Button BtnStart;
@@ -49,15 +49,14 @@ public class RichochetController {
    // ToggleButton tgbtnDampingOFF;
     
     @FXML
-    Button btnPause;
+    Button BtnStop;
 
     @FXML
-    Button btnReset;
+    Button BtnReset;
 
       @FXML
     Slider  SldWallAngle ;
-    @FXML
-    Slider SldAngleOfWall;
+   
 
     @FXML
     Slider SlfSpeedOfProjectile;
@@ -91,10 +90,9 @@ private Line wall;
    @FXML
 public void initialize() {
     createBall();
-    //createWall();
-    //setupButtonHandler();
+Eventhandelers();
      Wanderstellen();
-    // initEventHandlers();
+   
     startBallMovement();  
            
 }
@@ -144,7 +142,11 @@ private void startBallMovement() {
     animationTimer.start();
 }
 
-
+public void Eventhandelers(){
+BtnStop.setDisable(true);
+        BtnReset.setDisable(true);
+    
+}
 
 }
 
