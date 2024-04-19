@@ -22,8 +22,8 @@
    <center>
       <AnchorPane prefHeight="500.0" prefWidth="1600.0" BorderPane.alignment="CENTER">
          <children>
-            <Rectangle fx:id="block1" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="100.0" layoutX="300.0" layoutY="300.0" stroke="BLACK" strokeType="INSIDE" width="100.0" x="-50.0" y="-50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="300.0" />
-            <Rectangle fx:id="block2" arcHeight="5.0" arcWidth="5.0" fill="#ff1f1f" height="100.0" layoutX="1200.0" layoutY="400.0" stroke="BLACK" strokeType="INSIDE" width="100.0" x="-50.0" y="-50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="300.0" />
+            <Rectangle fx:id="block1" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="100.0" layoutX="300.0" layoutY="300.0" stroke="BLACK" strokeType="INSIDE" width="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="300.0" />
+            <Rectangle fx:id="block2" arcHeight="5.0" arcWidth="5.0" fill="#ff1f1f" height="100.0" layoutX="1200.0" layoutY="400.0" stroke="BLACK" strokeType="INSIDE" width="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="300.0" />
             <TextField editable="false" layoutX="14.0" layoutY="25.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="80.0" fx:id="xValue" />
             <TextField fx:id="yValue" editable="false" layoutX="14.0" layoutY="61.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="80.0" />
          </children>

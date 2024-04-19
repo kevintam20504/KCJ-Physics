@@ -92,6 +92,7 @@ public class CollisionController {
         physics.setMass2(mass2Slider.getValue() / 1000);
         physics.setVelocity2(-velocity2Slider.getValue());
         physics.setElasticity(elasticitySlider.getValue() / 100);
+        CollisionPhysics.setDistance((block2.getLayoutX() - (block1.getLayoutX() + 100)) / 100);
 
         //checks if window is resised
         //detects if if the X layout of block2 changes to change the appropriate distance between blocks
