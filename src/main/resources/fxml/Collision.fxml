@@ -72,17 +72,17 @@
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Velocity 1" GridPane.rowIndex="1" />
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Mass 2" GridPane.rowIndex="2" />
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Velocity 2" GridPane.rowIndex="3" />
-                        <Slider fx:id="mass1Slider" blockIncrement="1.0" majorTickUnit="200.0" max="1000.0" min="1.0" showTickLabels="true" showTickMarks="true" value="500.0" GridPane.columnIndex="1" />
-                        <Slider fx:id="velocity1Slider" blockIncrement="0.1" majorTickUnit="2.0" max="10.0" min="-10.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" value="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Slider fx:id="mass2Slider" blockIncrement="1.0" majorTickUnit="200.0" max="1000.0" min="1.0" showTickLabels="true" showTickMarks="true" value="1000.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" />
-                        <Slider fx:id="velocity2Slider" blockIncrement="0.1" majorTickUnit="2.0" max="10.0" min="-10.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" value="-10.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Slider fx:id="mass1Slider" blockIncrement="1.0" majorTickUnit="200.0" max="1000.0" min="1.0" showTickLabels="true" showTickMarks="true" value="100.0" GridPane.columnIndex="1" />
+                        <Slider fx:id="velocity1Slider" blockIncrement="0.1" majorTickUnit="2.0" max="10.0" min="-10.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" value="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Slider fx:id="mass2Slider" blockIncrement="1.0" majorTickUnit="200.0" max="1000.0" min="1.0" showTickLabels="true" showTickMarks="true" value="1.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" />
+                        <Slider fx:id="velocity2Slider" blockIncrement="0.1" majorTickUnit="2.0" max="10.0" min="-10.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" value="0.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <TextField fx:id="mass1Textfield" editable="false" GridPane.columnIndex="2" />
                         <TextField fx:id="velocity1Textfield" editable="false" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                         <TextField fx:id="mass2Textfield" editable="false" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                         <TextField fx:id="velocity2Textfield" editable="false" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                         <TextField fx:id="elasticityTextfield" editable="false" GridPane.columnIndex="2" GridPane.rowIndex="4" />
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Elasticity(%)" GridPane.rowIndex="4" />
-                        <Slider fx:id="elasticitySlider" blockIncrement="1.0" minorTickCount="4" showTickLabels="true" showTickMarks="true" value="5.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <Slider fx:id="elasticitySlider" blockIncrement="1.0" minorTickCount="4" showTickLabels="true" showTickMarks="true" value="100.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                      </children>
                      <opaqueInsets>
                         <Insets />
