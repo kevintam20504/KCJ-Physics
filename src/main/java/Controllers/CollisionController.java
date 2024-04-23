@@ -6,21 +6,18 @@ package Controllers;
 
 import Main.MainApp;
 import Main.CollisionPhysics;
-import javafx.animation.Animation;
-import javafx.animation.Interpolator;
-import javafx.animation.SequentialTransition;
-import javafx.animation.Transition;
-import javafx.animation.TranslateTransition;
+import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +28,9 @@ import org.slf4j.LoggerFactory;
 public class CollisionController {
 
     private final static Logger logger = LoggerFactory.getLogger(CollisionController.class);
+
+    @FXML
+    BorderPane borderPane;
 
     @FXML
     Slider mass1Slider;
@@ -80,42 +80,34 @@ public class CollisionController {
     @FXML
     TextField yValue;
 
-    SequentialTransition block1Transition = new SequentialTransition();
-    SequentialTransition block2Transition = new SequentialTransition();
+    @FXML
+    CheckBox reflectingBorderCheckBox;
+
+    @FXML
+    TextField collisionCountTf;
+
     CollisionPhysics physics = new CollisionPhysics();
+    AnimationTimer animationTimer;
+    int collisionCount = 0;
+    boolean isPlaying;
 
     @FXML
     public void initialize() {
-        //setting the default values
-        physics.setMass1(mass1Slider.getValue() / 1000);
-        physics.setVelocity1(velocity1Slider.getValue());
-        physics.setMass2(mass2Slider.getValue() / 1000);
-        physics.setVelocity2(-velocity2Slider.getValue());
-        physics.setElasticity(elasticitySlider.getValue() / 100);
-        CollisionPhysics.setDistance((block2.getLayoutX() - (block1.getLayoutX() + 100)) / 100);
-
-        //checks if window is resised
-        //detects if if the X layout of block2 changes to change the appropriate distance between blocks
-        block2.layoutXProperty().addListener((observable, oldValue, newValue) -> {
-            CollisionPhysics.setDistance((block2.getLayoutX() - (block1.getLayoutX() + 100)) / 100);
-            System.out.println("distance: " + CollisionPhysics.getDistance());
-            System.out.println("block1X: " + block1.getLayoutX());
-            System.out.println("block2X: " + block2.getLayoutX());
-        });
+        updatePhysics();
 
         //shows the slider values on the textfields
-        mass1Textfield.textProperty().bind(mass1Slider.valueProperty().asString("%.0f" + "g"));
-        mass2Textfield.textProperty().bind(mass2Slider.valueProperty().asString("%.0f" + "g"));
+        mass1Textfield.textProperty().bind(mass1Slider.valueProperty().asString("%.0f" + "kg"));
+        mass2Textfield.textProperty().bind(mass2Slider.valueProperty().asString("%.0f" + "kg"));
         velocity1Textfield.textProperty().bind(velocity1Slider.valueProperty().asString("%.1f" + "m/s"));
         velocity2Textfield.textProperty().bind(velocity2Slider.valueProperty().asString("%.1f" + "m/s"));
         elasticityTextfield.textProperty().bind(elasticitySlider.valueProperty().asString("%.0f" + "%%"));
 
         //checks the slider value after changing and updates the physics for these values
         mass1Slider.setOnMouseReleased(e -> {
-            physics.setMass1(Math.round(mass1Slider.getValue()) / 1000.0);
+            physics.setMass1(Math.round(mass1Slider.getValue()));
         });
         mass1Slider.setOnKeyReleased(e -> {
-            physics.setMass1(Math.round(mass1Slider.getValue()) / 1000.0);
+            physics.setMass1(Math.round(mass1Slider.getValue()));
         });
 
         velocity1Slider.setOnMouseReleased(e -> {
@@ -126,17 +118,17 @@ public class CollisionController {
         });
 
         mass2Slider.setOnMouseReleased(e -> {
-            physics.setMass2(Math.round(mass2Slider.getValue()) / 1000.0);
+            physics.setMass2(Math.round(mass2Slider.getValue()));
         });
         mass2Slider.setOnKeyReleased(e -> {
-            physics.setMass2(Math.round(mass2Slider.getValue()) / 1000.0);
+            physics.setMass2(Math.round(mass2Slider.getValue()));
         });
 
         velocity2Slider.setOnMouseReleased(e -> {
-            physics.setVelocity2(-Math.round(velocity2Slider.getValue() * 10) / 10.0);
+            physics.setVelocity2(Math.round(velocity2Slider.getValue() * 10) / 10.0);
         });
         velocity2Slider.setOnKeyReleased(e -> {
-            physics.setVelocity2(-Math.round(velocity2Slider.getValue() * 10) / 10.0);
+            physics.setVelocity2(Math.round(velocity2Slider.getValue() * 10) / 10.0);
         });
 
         elasticitySlider.setOnMouseReleased(e -> {
@@ -153,119 +145,126 @@ public class CollisionController {
         });
     }
 
-    //creates the animation
-    //https://docs.oracle.com/javase/8/javafx/api/javafx/animation/SequentialTransition.html
-    //https://openjfx.io/javadoc/14/javafx.graphics/javafx/animation/Transition.html#interpolatorProperty
-    public void drawAnimation() {
-        System.out.println(physics);
+    //setting the default values
+    public void updatePhysics() {
+        physics.setMass1((long) mass1Slider.getValue());
+        physics.setVelocity1(velocity1Slider.getValue());
+        physics.setMass2((long) mass2Slider.getValue());
+        physics.setVelocity2(velocity2Slider.getValue());
+        physics.setElasticity(elasticitySlider.getValue() / 100);
+        CollisionPhysics.setDistance((block2.getLayoutX() - (block1.getLayoutX() + 100.0)) / 100.0);
+    }
 
-        TranslateTransition b1BeforeCollision = new TranslateTransition(Duration.seconds(physics.getCollisionTime()), block1);
-        b1BeforeCollision.setFromX(0);//from start of block1
-        b1BeforeCollision.setToX(physics.getBlock1DistanceTravelled() * 100);//to point of collision
+    public void createAnimation() {
+        animationTimer = new AnimationTimer() {
+            double change1 = physics.getVelocity1();
+            double change2 = physics.getVelocity2();
 
-        TranslateTransition b2BeforeCollsion = new TranslateTransition(Duration.seconds(physics.getCollisionTime()), block2);
-        b2BeforeCollsion.setFromX(0);//from start of block2
-        b2BeforeCollsion.setToX(-physics.getBlock2DistanceTravelled() * 100);//to point of collision
+            @Override
+            public void handle(long now) {
+                System.out.println(change1);
+                System.out.println(change2);
+                for (int i = 0; i < 100; i++) {
+                    block1.setTranslateX(block1.getTranslateX() + change1 / 100);
+                    block2.setTranslateX(block2.getTranslateX() + change2 / 100);
 
-        TranslateTransition b1AfterCollision = new TranslateTransition();
-        b1AfterCollision.setNode(block1);
-        b1AfterCollision.setFromX(physics.getBlock1DistanceTravelled() * 100);//from point of collision
+                    if (block1.getBoundsInParent().intersects(block2.getBoundsInParent())) {
+                        do {
+                            block1.setTranslateX(block1.getTranslateX() - change1 / 100);
+                            block2.setTranslateX(block2.getTranslateX() - change2 / 100);
+                        } while (block1.getBoundsInParent().intersects(block2.getBoundsInParent()));
 
-        TranslateTransition b2AfterCollision = new TranslateTransition();
-        b2AfterCollision.setNode(block2);
-        b2AfterCollision.setFromX(-physics.getBlock2DistanceTravelled() * 100);//from point of collision
+                        if ((change2 == 0 && block2.getTranslateX() == AnchorPane.getRightAnchor(block2)) || (change1 == 0 && block1.getTranslateX() == -AnchorPane.getLeftAnchor(block1))) {
+                            change1 = 0.0;
+                            change2 = 0.0;
+                        } else {
+                            collisionCountTf.setText(String.valueOf(++collisionCount));
+                            change1 = physics.getVelocity1Final();
+                            change2 = physics.getVelocity2Final();
+                        }
+                        physics.setVelocity1(change1);
+                        physics.setVelocity2(change2);
+                    }
 
-        double b1DistFromEdge = AnchorPane.getLeftAnchor(block1) / 100;
-        double b2DistFromEdge = AnchorPane.getRightAnchor(block2) / 100;
+                    if (block1.getLayoutX() + block1.getTranslateX() < 0.0) {
+                        if (reflectingBorderCheckBox.isSelected()) {
+                            block1.setTranslateX(-AnchorPane.getLeftAnchor(block1));
+                            collisionCountTf.setText(String.valueOf(++collisionCount));
+                            if (physics.getElasticity() < 1 && -change1 < 0.1) {
+                                change1 = 0;
+                            } else {
+                                change1 = -change1 * physics.getElasticity();
+                            }
+                            physics.setVelocity1(change1);
+                        }
+                    }
 
-        if (physics.getVelocity1Final() < 0) {
-            double dist = physics.getBlock1DistanceTravelled() + b1DistFromEdge;
-            double time = dist / Math.abs(physics.getVelocity1Final());
+                    if (block2.getLayoutX() + block2.getTranslateX() > borderPane.getWidth() - block2.getWidth()) {
+                        if (reflectingBorderCheckBox.isSelected()) {
+                            block2.setTranslateX(AnchorPane.getRightAnchor(block2));
+                            collisionCountTf.setText(String.valueOf(++collisionCount));
+                            System.out.println("right");
+                            if (physics.getElasticity() < 1 && change2 < 0.1) {
+                                change2 = 0;
+                            } else {
+                                change2 = -change2 * physics.getElasticity();
+                            }
+                            physics.setVelocity2(change2);
+                        }
+                    }
+                }
 
-            b1AfterCollision.setToX(-b1DistFromEdge * 100);
-            b1AfterCollision.setDuration(Duration.seconds(time));
-
-        } else if (physics.getVelocity1Final() > 0) {
-            double dist = physics.getBlock2DistanceTravelled() + b2DistFromEdge;
-            double time = dist / Math.abs(physics.getVelocity1Final());
-
-            b1AfterCollision.setToX((physics.getBlock1DistanceTravelled() + dist) * 100);
-            b1AfterCollision.setDuration(Duration.seconds(time));
-        }
-
-        if (physics.getVelocity2Final() > 0) {
-            double dist = physics.getBlock2DistanceTravelled() + b2DistFromEdge;
-            double time = dist / Math.abs(physics.getVelocity2Final());
-
-            b2AfterCollision.setToX(b2DistFromEdge * 100);
-            b2AfterCollision.setDuration(Duration.seconds(time));
-
-        } else if (physics.getVelocity2Final() < 0) {
-            double dist = physics.getBlock1DistanceTravelled() + b1DistFromEdge;
-            double time = dist / Math.abs(physics.getVelocity2Final());
-
-            b2AfterCollision.setToX(-(physics.getBlock2DistanceTravelled() + dist) * 100);
-            b2AfterCollision.setDuration(Duration.seconds(time));
-        }
-
-        b1BeforeCollision.setInterpolator(Interpolator.LINEAR);
-        b2BeforeCollsion.setInterpolator(Interpolator.LINEAR);
-        b1AfterCollision.setInterpolator(Interpolator.LINEAR);
-        b2AfterCollision.setInterpolator(Interpolator.LINEAR);
-
-        block1Transition.getChildren().clear();
-        block2Transition.getChildren().clear();
-        block1Transition.getChildren().addAll(b1BeforeCollision, b1AfterCollision);
-        block2Transition.getChildren().addAll(b2BeforeCollsion, b2AfterCollision);
+            }
+        };
     }
 
     //if animation is running it pauses, otherwise it plays the animation
     @FXML
     void startStopButtonOnAction(ActionEvent event) {
-        boolean isPaused1 = block1Transition.getStatus().equals(Transition.Status.PAUSED);
-        boolean isAtStart1 = block1Transition.getCurrentTime().equals(Duration.ZERO);
-        boolean isPaused2 = block2Transition.getStatus().equals(Transition.Status.PAUSED);
-        boolean isAtStart2 = block2Transition.getCurrentTime().equals(Duration.ZERO);
-        boolean isRunning = block1Transition.getStatus().equals(Transition.Status.RUNNING) || block2Transition.getStatus().equals(Transition.Status.RUNNING);
 
-        if (isRunning) {
-            block1Transition.pause();
-            block2Transition.pause();
+        if (isPlaying) {
+            animationTimer.stop();
+            isPlaying = false;
+
+            //enables sliders to be adjusted
+            mass1Slider.setDisable(false);
+            velocity1Slider.setDisable(false);
+            mass2Slider.setDisable(false);
+            velocity2Slider.setDisable(false);
+            elasticitySlider.setDisable(false);
+
             logger.info("Pausing Collision Animation");
-        } else {
+        } else if (!isPlaying) {
+            createAnimation();
+            animationTimer.start();
+            isPlaying = true;
 
-            if (isAtStart1 && isAtStart2) {
-                drawAnimation();//creates animation
+            //disables sliders when animation starts
+            mass1Slider.setDisable(true);
+            velocity1Slider.setDisable(true);
+            mass2Slider.setDisable(true);
+            velocity2Slider.setDisable(true);
+            elasticitySlider.setDisable(true);
 
-                //disables sliders when animation starts
-                mass1Slider.setDisable(true);
-                velocity1Slider.setDisable(true);
-                mass2Slider.setDisable(true);
-                velocity2Slider.setDisable(true);
-                elasticitySlider.setDisable(true);
+            //disables resizing window
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setResizable(false);
 
-                //disables resizing window
-                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                stage.setResizable(false);
-            }
-            if (isPaused1 || isAtStart1) {
-                block1Transition.play();
-                logger.info("Playing block1 Collision Animation");
-            }
-            if (isPaused2 || isAtStart2) {
-                block2Transition.play();
-                logger.info("Playing block2 Collision Animation");
-            }
+            logger.info("Playing Collision Animation");
         }
     }
 
     //resets the animation
     @FXML
     void resetButtonOnAction(ActionEvent event) {
-        block1Transition.playFromStart();
-        block2Transition.playFromStart();
-        block1Transition.stop();
-        block2Transition.stop();
+        animationTimer.stop();
+        collisionCount = 0;
+        collisionCountTf.setText("0");
+
+        block1.setTranslateX(0);
+        block2.setTranslateX(0);
+        updatePhysics();
+        isPlaying = false;
 
         //enables sliders to be adjusted
         mass1Slider.setDisable(false);
@@ -288,10 +287,73 @@ public class CollisionController {
         MainApp.switchScene("MainMenu", new FXMLMainMenuController());
         stage.sizeToScene();
         stage.centerOnScreen();
-        
-        //enables resizing window
         stage.setResizable(true);
-        
+
+        animationTimer.stop();
         logger.info("Exited Collision scene");
+    }
+
+    public void createAnimation2() {
+        int digits = 5;
+        physics.setMass2((long) Math.pow(100, digits - 1));
+        AnchorPane.clearConstraints(block1);
+        AnchorPane.clearConstraints(block2);
+        AnchorPane.setBottomAnchor(block1, 0.0);
+        AnchorPane.setBottomAnchor(block2, 0.0);
+
+        animationTimer = new AnimationTimer() {
+            double change1 = physics.getVelocity1();
+            double change2 = physics.getVelocity2();
+            int e = 1000;
+
+            //(block2.getLayoutX() - (block1.getLayoutX() + 100.0)) <= 0.1
+            //block1.getBoundsInParent().intersects(block2.getBoundsInParent())
+            @Override
+            public void handle(long now) {
+                for (int i = 0; i < e; i++) {
+                    block1.setLayoutX(block1.getLayoutX() + change1 / e);
+                    block2.setLayoutX(block2.getLayoutX() + change2 / e);
+                    if ((block2.getLayoutX() - (block1.getLayoutX() + 100.0)) <= 0.1) {
+                        System.out.println(physics);
+                        collisionCountTf.setText(String.valueOf(++collisionCount));
+                        block1.setLayoutX(block1.getLayoutX() - change1 / e);
+                        block2.setLayoutX(block2.getLayoutX() - change2 / e);
+                        change1 = physics.getVelocity1Final();
+                        change2 = physics.getVelocity2Final();
+                        physics.setVelocity1(change1);
+                        physics.setVelocity2(change2);
+
+                    }
+
+                    if (block1.getLayoutX() < 0.0) {
+                        if (!reflectingBorderCheckBox.isSelected()) {
+                            collisionCountTf.setText(String.valueOf(++collisionCount));
+                            block1.setLayoutX(0.0);
+                            change1 = 0;
+                        } else {
+                            collisionCountTf.setText(String.valueOf(++collisionCount));
+                            change1 = -change1;
+                            physics.setVelocity1(change1);
+
+                        }
+
+                    }
+
+                    if (block2.getLayoutX() > borderPane.getWidth() - block2.getWidth()) {
+                        if (!reflectingBorderCheckBox.isSelected()) {
+                            collisionCountTf.setText(String.valueOf(++collisionCount));
+                            block2.setLayoutX(borderPane.getWidth() - block2.getWidth());
+                            change2 = 0;
+                        } else {
+                            collisionCountTf.setText(String.valueOf(++collisionCount));
+                            change2 = -change2;
+                            physics.setVelocity2(change2);
+
+                        }
+
+                    }
+                }
+            }
+        };
     }
 }

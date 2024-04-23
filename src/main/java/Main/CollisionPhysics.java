@@ -11,9 +11,9 @@ package Main;
 public class CollisionPhysics {
 
     private static double distance;//distance between blocks in meters. note the scale is 1m=100pixels
-    private double mass1;
+    private long mass1;
     private double velocity1;
-    private double mass2;
+    private long mass2;
     private double velocity2;
     private double elasticity;
 
@@ -21,7 +21,7 @@ public class CollisionPhysics {
         this(0, 0, 0, 0, 0);
     }
 
-    public CollisionPhysics(double mass1, double velocity1, double mass2, double velocity2, double elasticity) {
+    public CollisionPhysics(long mass1, double velocity1, long mass2, double velocity2, double elasticity) {
         this.mass1 = mass1;
         this.velocity1 = velocity1;
         this.mass2 = mass2;
@@ -31,13 +31,13 @@ public class CollisionPhysics {
 
     //gets the time at which the blocks collide
     public double getCollisionTime() {
-        double time = distance / (velocity1 + Math.abs(velocity2));
+        double time = distance / Math.abs(velocity1 - velocity2);
         return time;
     }
 
     //gets the distance travelled by block1 
     public double getBlock1DistanceTravelled() {
-        double dist = velocity1 * getCollisionTime();
+        double dist = Math.abs(velocity1) * getCollisionTime();
         return dist;
     }
 
@@ -90,7 +90,7 @@ public class CollisionPhysics {
         return this.mass1;
     }
 
-    public void setMass1(double mass1) {
+    public void setMass1(long mass1) {
         this.mass1 = mass1;
     }
 
@@ -98,7 +98,15 @@ public class CollisionPhysics {
         return this.mass2;
     }
 
-    public void setMass2(double mass2) {
+    public double getVelocity1() {
+        return this.velocity1;
+    }
+
+    public double getVelocity2() {
+        return this.velocity2;
+    }
+
+    public void setMass2(long mass2) {
         this.mass2 = mass2;
     }
 
@@ -118,12 +126,16 @@ public class CollisionPhysics {
         this.elasticity = elasticity;
     }
 
+//    @Override
+//    public String toString() {
+//        return "CollisionPhysics{" + "dist=" + distance + "mass1=" + mass1 + ", velocity1=" + velocity1 + ", mass2=" + mass2
+//                + ", velocity2=" + velocity2 + ", elasticity=" + elasticity + ", collisionTime=" + this.getCollisionTime()
+//                + ", block1Dist=" + this.getBlock1DistanceTravelled() + ", block2Dist=" + this.getBlock2DistanceTravelled()
+//                + ", velocity1F=" + this.getVelocity1Final() + ", velocity2F=" + this.getVelocity2Final() + '}';
+//    }
     @Override
     public String toString() {
-        return "CollisionPhysics{" + "dist=" + distance + "mass1=" + mass1 + ", velocity1=" + velocity1 + ", mass2=" + mass2
-                + ", velocity2=" + velocity2 + ", elasticity=" + elasticity + ", collisionTime=" + this.getCollisionTime()
-                + ", block1Dist=" + this.getBlock1DistanceTravelled() + ", block2Dist=" + this.getBlock2DistanceTravelled()
-                + ", velocity1=" + this.getVelocity1Final() + ", velocity2=" + this.getVelocity2Final() + '}';
+        return "CollisionPhysics{" + "velocity1=" + velocity1 + ", velocity2=" + velocity2 + ", velocity1F=" + this.getVelocity1Final() + ", velocity2F=" + this.getVelocity2Final() + '}';
     }
 
 }
