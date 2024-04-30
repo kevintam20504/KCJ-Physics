@@ -6,11 +6,20 @@ package Controllers;
 
 import Main.MainApp;
 import Main.CollisionPhysics;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
@@ -69,12 +78,6 @@ public class CollisionController {
     Rectangle block2;
 
     @FXML
-    LineChart block1Graph;
-
-    @FXML
-    LineChart block2Graph;
-
-    @FXML
     TextField xValue;
 
     @FXML
@@ -86,6 +89,18 @@ public class CollisionController {
     @FXML
     TextField collisionCountTf;
 
+    final NumberAxis velocity1Axis = new NumberAxis();
+    final NumberAxis velocity2Axis = new NumberAxis();
+    final NumberAxis xAxis = new NumberAxis();
+
+    @FXML
+    LineChart block1Graph = new LineChart(xAxis, velocity1Axis);
+
+    @FXML
+    LineChart block2Graph = new LineChart(xAxis, velocity2Axis);
+
+    ScheduledExecutorService scheduledExecutorService;
+
     CollisionPhysics physics = new CollisionPhysics();
     AnimationTimer animationTimer;
     int collisionCount = 0;
@@ -93,6 +108,47 @@ public class CollisionController {
 
     @FXML
     public void initialize() {
+
+        block1Graph.getYAxis().setLabel("block1 vel");
+        block1Graph.getYAxis().setAnimated(false);
+        block2Graph.getYAxis().setLabel("block2 vel");
+        block2Graph.getYAxis().setAnimated(false);
+        block1Graph.getXAxis().setLabel("time");
+        block1Graph.getXAxis().setAnimated(false);
+        block2Graph.getXAxis().setLabel("time");
+        block2Graph.getXAxis().setAnimated(false);
+
+        XYChart.Series<String, Number> series1 = new XYChart.Series<>();
+        series1.setName("Block1");
+        XYChart.Series<String, Number> series2 = new XYChart.Series<>();
+        series2.setName("Block2");
+
+        // this is used to display time in HH:mm:ss format
+        final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
+
+        // setup a scheduled executor to periodically put data into the chart
+        scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+
+        // put dummy data onto graph per second
+        scheduledExecutorService.scheduleAtFixedRate(() -> {
+            // get a random integer between 0-10
+            Integer random = ThreadLocalRandom.current().nextInt(10);
+
+            // Update the chart
+            Platform.runLater(() -> {
+                // get current time
+                Date now = new Date();
+                // put random number with current time
+                series1.getData().add(new XYChart.Data<>(simpleDateFormat.format(now), physics.getVelocity1()));
+                series2.getData().add(new XYChart.Data<>(simpleDateFormat.format(now), physics.getVelocity2()));
+            });
+        }, 0, 1, TimeUnit.SECONDS);
+
+        block1Graph.setAnimated(false);
+        block1Graph.getData().add(series1);
+        block2Graph.setAnimated(false);
+        block2Graph.getData().add(series2);
+
         updatePhysics();
 
         //shows the slider values on the textfields
@@ -210,8 +266,8 @@ public class CollisionController {
                             physics.setVelocity2(change2);
                         }
                     }
-                } 
-           }
+                }
+            }
         };
     }
 
@@ -261,6 +317,7 @@ public class CollisionController {
         block2.setTranslateX(0);
         updatePhysics();
         isPlaying = false;
+        scheduledExecutorService.shutdownNow();
 
         //enables sliders to be adjusted
         mass1Slider.setDisable(false);
@@ -284,6 +341,7 @@ public class CollisionController {
         stage.sizeToScene();
         stage.centerOnScreen();
         stage.setResizable(true);
+        scheduledExecutorService.shutdownNow();
 
         animationTimer.stop();
         logger.info("Exited Collision scene");
