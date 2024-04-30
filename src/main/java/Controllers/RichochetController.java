@@ -65,6 +65,7 @@ public class RichochetController {
     
     Slider SldSWind;
 
+    private double gravity = 0.98;
     @FXML
     ToggleButton BtnGravity;
 
@@ -90,8 +91,25 @@ public void initialize() {
 Eventhandelers();
      Wanderstellen();
    initializeHandlers();
-  //  startBallMovement();  
-           
+ 
+     SldSpeed.setMin(0);
+    SldSpeed.setMax(20);
+    SldSpeed.setValue(1); 
+    
+      SldShotAngle.setMin(0);
+    SldShotAngle.setMax(10);
+    SldShotAngle.setValue(0);
+     SldShotAngle.setBlockIncrement(0.1);
+
+  
+    SldSpeed.valueProperty().addListener((obs, oldVal, newVal) -> {
+        velocityX = newVal.doubleValue();
+        System.out.println("Speed adjusted to: " + velocityX);  
+    });      
+    
+      SldShotAngle.valueProperty().addListener((obs, oldVal, newVal) -> {
+        adjustShootingAngle(newVal.doubleValue());
+    });
 }
 private void createBall() {
  
@@ -100,8 +118,13 @@ private void createBall() {
     ball.setLayoutY(200); 
     Paneforscene.getChildren().add(ball);
 }
-
-
+private void adjustShootingAngle(double angle) {
+    double angleInRadians = Math.toRadians(angle); 
+    double baseSpeed = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
+      velocityX = Math.cos(angleInRadians) * baseSpeed;
+      System.out.println("Adjusted velocities -> VelocityX: " + velocityX + ", VelocityY: " + velocityY);
+   resetSimulation();
+}
 
  private Line slantedWall;
 private final double wallAngle =0; 
@@ -117,7 +140,7 @@ private void Wanderstellen(){
 
     Paneforscene.getChildren().add(slantedWall);
 }
-/*
+
 private void startBallMovement() {
     velocityX = 10;
     velocityY = 0;
@@ -137,7 +160,7 @@ private void startBallMovement() {
         }
     };
     animationTimer.start();
-}*/
+}
 
  private void initializeHandlers() {
         BtnStart.setOnAction(e -> startSimulation());
@@ -148,7 +171,11 @@ private void startBallMovement() {
         BtnReset.setDisable(true);
 
         SldWallAngle.valueProperty().addListener((obs, oldVal, newVal) -> rotateWall(newVal.doubleValue()));
+        
+
     }
+ 
+ 
 public void Eventhandelers(){
 BtnStop.setDisable(true);
         BtnReset.setDisable(true);
@@ -173,6 +200,9 @@ BtnStop.setDisable(true);
                         velocityX = Math.cos(newAngle) * 10;
                         velocityY = Math.sin(newAngle) * 10;
                     }
+                      if (ball.getLayoutY() >= (Paneforscene.getHeight() - ball.getRadius())) {
+                    velocityY = -velocityY * 0.9; 
+                } 
                 }
             };
         }
@@ -198,6 +228,7 @@ BtnStop.setDisable(true);
         velocityY = 0;
         BtnReset.setDisable(true);
         BtnStart.setDisable(false);
+         startSimulation();
     }
   
   private void rotateWall(double angle) {
