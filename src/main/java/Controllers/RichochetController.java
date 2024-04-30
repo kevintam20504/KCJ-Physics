@@ -65,7 +65,7 @@ public class RichochetController {
     
     Slider SldSWind;
 
-    private double gravity = 0.98;
+    private double gravity =.098;
     @FXML
     ToggleButton BtnGravity;
 
@@ -92,9 +92,9 @@ Eventhandelers();
      Wanderstellen();
    initializeHandlers();
  
-     SldSpeed.setMin(0);
-    SldSpeed.setMax(20);
-    SldSpeed.setValue(1); 
+     SldSpeed.setMin(20);
+    SldSpeed.setMax(80);
+    SldSpeed.setValue(21); 
     
       SldShotAngle.setMin(0);
     SldShotAngle.setMax(10);
@@ -133,7 +133,7 @@ private void Wanderstellen(){
     double centerX = 200 + Paneforscene.getWidth();
     double centerY = 210;
 
-    slantedWall = new Line(centerX - 100, centerY, centerX + 100, centerY);
+    slantedWall = new Line(centerX - 50, centerY, centerX + 100, centerY);
     slantedWall.setStroke(Color.BLACK);
     Rotate rotateWall = new Rotate(wallAngle, centerX, centerY);
     slantedWall.getTransforms().add(rotateWall);
@@ -207,9 +207,10 @@ private void startSimulation() {
                     gravityEnabled = true;
 
                    double wallAngle = -SldWallAngle.getValue();
-    double initialUpwardVelocity = 10;  
+   
 
     double newAngle = Math.toRadians(2 * wallAngle);
+     double initialUpwardVelocity = 10;  //velocityX*Math.cos(wallAngle) ;  
     velocityX = Math.cos(newAngle) * 10;
     velocityY = -Math.abs(Math.sin(newAngle) * initialUpwardVelocity); 
 
