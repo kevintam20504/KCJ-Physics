@@ -104,11 +104,11 @@ private void createBall() {
 
 
  private Line slantedWall;
-private final double wallAngle = 200; 
+private final double wallAngle =0; 
 
 private void Wanderstellen(){
     double centerX = 200 + Paneforscene.getWidth();
-    double centerY = 200;
+    double centerY = 210;
 
     slantedWall = new Line(centerX - 100, centerY, centerX + 100, centerY);
     slantedWall.setStroke(Color.BLACK);
@@ -117,7 +117,7 @@ private void Wanderstellen(){
 
     Paneforscene.getChildren().add(slantedWall);
 }
-
+/*
 private void startBallMovement() {
     velocityX = 10;
     velocityY = 0;
@@ -137,7 +137,7 @@ private void startBallMovement() {
         }
     };
     animationTimer.start();
-}
+}*/
 
  private void initializeHandlers() {
         BtnStart.setOnAction(e -> startSimulation());
@@ -168,7 +168,7 @@ BtnStop.setDisable(true);
 
                   
                     if (ball.getBoundsInParent().intersects(slantedWall.getBoundsInParent())) {
-                        double wallAngleRadians = Math.toRadians(SldWallAngle.getValue());
+                        double wallAngleRadians = Math.toRadians(-SldWallAngle.getValue());
                         double newAngle = wallAngleRadians * 2;
                         velocityX = Math.cos(newAngle) * 10;
                         velocityY = Math.sin(newAngle) * 10;
@@ -193,7 +193,7 @@ BtnStop.setDisable(true);
   private void resetSimulation() {
         stopSimulation();
         ball.setLayoutX(50);
-        ball.setLayoutY(300);
+        ball.setLayoutY(150);
         velocityX = 2;
         velocityY = 0;
         BtnReset.setDisable(true);
@@ -201,7 +201,7 @@ BtnStop.setDisable(true);
     }
   
   private void rotateWall(double angle) {
-        Rotate rotate = new Rotate(angle, slantedWall.getStartX(), slantedWall.getStartY());
+        Rotate rotate = new Rotate(-angle, slantedWall.getStartX(), slantedWall.getStartY());
         slantedWall.getTransforms().clear();
         slantedWall.getTransforms().add(rotate);
     }
