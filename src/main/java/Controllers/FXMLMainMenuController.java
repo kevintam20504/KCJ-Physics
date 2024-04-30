@@ -34,7 +34,7 @@ public class FXMLMainMenuController {
     public void initialize() {
     }
 
-    @FXML
+   @FXML
     void gravityOnAction(ActionEvent event) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         MainApp.switchScene("Gravity", new GravityController());
