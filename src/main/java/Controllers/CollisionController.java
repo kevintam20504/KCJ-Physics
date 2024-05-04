@@ -99,7 +99,8 @@ public class CollisionController {
     @FXML
     LineChart block2Graph = new LineChart(xAxis, velocity2Axis);
 
-    ScheduledExecutorService scheduledExecutorService;
+    XYChart.Series series1 = new XYChart.Series();
+    XYChart.Series series2 = new XYChart.Series();
 
     CollisionPhysics physics = new CollisionPhysics();
     AnimationTimer animationTimer;
@@ -109,45 +110,23 @@ public class CollisionController {
     @FXML
     public void initialize() {
 
-        block1Graph.getYAxis().setLabel("block1 vel");
-        block1Graph.getYAxis().setAnimated(false);
-        block2Graph.getYAxis().setLabel("block2 vel");
-        block2Graph.getYAxis().setAnimated(false);
-        block1Graph.getXAxis().setLabel("time");
-        block1Graph.getXAxis().setAnimated(false);
-        block2Graph.getXAxis().setLabel("time");
-        block2Graph.getXAxis().setAnimated(false);
+        block1Graph.setCreateSymbols(false);
+        block2Graph.setCreateSymbols(false);
 
-        XYChart.Series<String, Number> series1 = new XYChart.Series<>();
+        block1Graph.getYAxis().setLabel("block1 vel");
+        //block1Graph.getYAxis().setAnimated(true);
+        block2Graph.getYAxis().setLabel("block2 vel");
+        //block2Graph.getYAxis().setAnimated(true);
+        block1Graph.getXAxis().setLabel("time");
+        //block1Graph.getXAxis().setAnimated(true);
+        block2Graph.getXAxis().setLabel("time");
+        //block2Graph.getXAxis().setAnimated(true);
+
         series1.setName("Block1");
-        XYChart.Series<String, Number> series2 = new XYChart.Series<>();
         series2.setName("Block2");
 
-        // this is used to display time in HH:mm:ss format
-        final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
-
-        // setup a scheduled executor to periodically put data into the chart
-        scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-
-        // put dummy data onto graph per second
-        scheduledExecutorService.scheduleAtFixedRate(() -> {
-            // get a random integer between 0-10
-            Integer random = ThreadLocalRandom.current().nextInt(10);
-
-            // Update the chart
-            Platform.runLater(() -> {
-                // get current time
-                Date now = new Date();
-                // put random number with current time
-                series1.getData().add(new XYChart.Data<>(simpleDateFormat.format(now), physics.getVelocity1()));
-                series2.getData().add(new XYChart.Data<>(simpleDateFormat.format(now), physics.getVelocity2()));
-            });
-        }, 0, 1, TimeUnit.SECONDS);
-
         block1Graph.setAnimated(false);
-        block1Graph.getData().add(series1);
         block2Graph.setAnimated(false);
-        block2Graph.getData().add(series2);
 
         updatePhysics();
 
@@ -216,8 +195,29 @@ public class CollisionController {
             double change1 = physics.getVelocity1();
             double change2 = physics.getVelocity2();
 
+            double startTime = System.currentTimeMillis();
+
             @Override
             public void handle(long now) {
+                double elapsedTime = (System.currentTimeMillis() - startTime) / 1000;
+
+                block1Graph.getData().clear();
+                block2Graph.getData().clear();
+
+                series1.getData().add(new XYChart.Data<>(String.valueOf(elapsedTime), change1));
+                series2.getData().add(new XYChart.Data<>(String.valueOf(elapsedTime), change2));
+
+                if (series1.getData().size() > 30) {
+                    series1.getData().remove(0);
+                }
+
+                if (series2.getData().size() > 30) {
+                    series2.getData().remove(0);
+                }
+
+                block1Graph.getData().add(series1);
+                block2Graph.getData().add(series2);
+
                 for (int i = 0; i < 100; i++) {
                     block1.setTranslateX(block1.getTranslateX() + change1 / 100);
                     block2.setTranslateX(block2.getTranslateX() + change2 / 100);
@@ -317,7 +317,6 @@ public class CollisionController {
         block2.setTranslateX(0);
         updatePhysics();
         isPlaying = false;
-        scheduledExecutorService.shutdownNow();
 
         //enables sliders to be adjusted
         mass1Slider.setDisable(false);
@@ -341,60 +340,8 @@ public class CollisionController {
         stage.sizeToScene();
         stage.centerOnScreen();
         stage.setResizable(true);
-        scheduledExecutorService.shutdownNow();
 
         animationTimer.stop();
         logger.info("Exited Collision scene");
-    }
-
-    public void createAnimation2() {
-        int digits = 5;
-        physics.setMass1((long) Math.pow(100, digits - 1));
-        animationTimer = new AnimationTimer() {
-            double change1 = physics.getVelocity1();
-            double change2 = physics.getVelocity2();
-            int e = 1000;
-
-            //(block2.getLayoutX() - (block1.getLayoutX() + 100.0)) <= 0.1
-            //block1.getBoundsInParent().intersects(block2.getBoundsInParent())
-            @Override
-            public void handle(long now) {
-                for (int i = 0; i < e; i++) {
-                    block1.setTranslateX(block1.getTranslateX() + change1 / e);
-                    block2.setTranslateX(block2.getTranslateX() + change2 / e);
-                    if (block1.getBoundsInParent().intersects(block2.getBoundsInParent())) {
-//                        do {
-//                            block1.setTranslateX(block1.getTranslateX() - change1 / e);
-//                            block2.setTranslateX(block2.getTranslateX() - change2 / e);
-//                        } while (block1.getBoundsInParent().intersects(block2.getBoundsInParent()));
-                        block1.setTranslateX(block1.getTranslateX() - change1 / e);
-                        block2.setTranslateX(block2.getTranslateX() - change2 / e);
-                        collisionCountTf.setText(String.valueOf(++collisionCount));
-                        change1 = physics.getVelocity1Final();
-                        change2 = physics.getVelocity2Final();
-                        physics.setVelocity1(change1);
-                        physics.setVelocity2(change2);
-
-                    }
-
-//                    if (block1.getLayoutX() + block1.getTranslateX() < 0.0) {
-//                        if (reflectingBorderCheckBox.isSelected()) {
-//                            block1.setTranslateX(-AnchorPane.getLeftAnchor(block1));
-//                            collisionCountTf.setText(String.valueOf(++collisionCount));
-//                            change1 = -change1;
-//                            physics.setVelocity1(change1);
-//                        }
-//                    }
-                    if (block2.getLayoutX() + block2.getTranslateX() > borderPane.getWidth() - block2.getWidth()) {
-                        if (reflectingBorderCheckBox.isSelected()) {
-                            block2.setTranslateX(AnchorPane.getRightAnchor(block2));
-                            collisionCountTf.setText(String.valueOf(++collisionCount));
-                            change2 = -change2;
-                            physics.setVelocity2(change2);
-                        }
-                    }
-                }
-            }
-        };
     }
 }
