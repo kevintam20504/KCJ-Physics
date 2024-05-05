@@ -94,8 +94,11 @@ private Slider SldWind;
 
    @FXML
    
-   
-   
+    private double initialXPosition;
+    private double initialYPosition;
+   private Line horizontalWall;
+    private double horizontalWallLength = 10;
+    
 public void initialize() {
     
      
@@ -103,13 +106,15 @@ public void initialize() {
 Eventhandelers();
      Wanderstellen();
    initializeHandlers();
+   
+     createHorizontalWall();
  
      SldSpeed.setMin(5);
-    SldSpeed.setMax(60);
-    SldSpeed.setValue(25); 
+    SldSpeed.setMax(20);
+    SldSpeed.setValue(1); 
     
       SldShotAngle.setMin(0);
-    SldShotAngle.setMax(10);
+    SldShotAngle.setMax(100);
     SldShotAngle.setValue(0);
      SldShotAngle.setBlockIncrement(0.1);
 
@@ -121,10 +126,13 @@ Eventhandelers();
         velocityX = newVal.doubleValue();
         System.out.println("Speed adjusted to: " + velocityX);  
     });      
+     initialXPosition = ball.getLayoutX();
     
      /* SldShotAngle.valueProperty().addListener((obs, oldVal, newVal) -> {
         adjustShootingAngle(newVal.doubleValue());
     });*/
+     
+       SldShotAngle.valueProperty().addListener((obs, oldVal, newVal) -> updateHorizontalWallPosition());
 }
 
 
@@ -145,6 +153,16 @@ private void adjustShootingAngle(double angle) {
      // System.out.println("Adjusted velocities -> VelocityX: " + velocityX + ", VelocityY: " + velocityY);
    resetSimulation();
 }*/
+
+ private void createHorizontalWall() {
+        double centerX = 200 + Paneforscene.getWidth();
+        double centerY = 300; // Y position of the horizontal wall
+
+        horizontalWall = new Line(centerX - horizontalWallLength / 2, centerY, centerX + horizontalWallLength / 2, centerY);
+        horizontalWall.setStroke(Color.BLACK);
+        Paneforscene.getChildren().add(horizontalWall);
+    }
+
 
  private Line slantedWall;
 private final double wallAngle =0; 
@@ -301,10 +319,27 @@ private void startSimulation() {
     if (gravityEnabled) {
         velocityY += gravity;
     }
+    
+     
 
     double newX = ball.getLayoutX() + velocityX;
     double newY = ball.getLayoutY() + velocityY;
 
+    double distanceX = Math.abs(newX - initialXPosition);
+    
+     
+    System.out.println("Distance traveled in X: " + distanceX);
+    
+     if (newY >= initialYPosition) {
+  
+        animationTimer.stop();
+        System.out.println("Ball returned to or passed initial y position."+distanceX);
+         startSimulation();
+    }
+     
+     ball.setLayoutX(newX);
+    ball.setLayoutY(newY);
+    
     if (newX - ball.getRadius() < slantedWall.getEndX() && newY >= slantedWall.getStartY() && newY <= slantedWall.getEndY()) {
        
         PauseTransition pauseTransition = new PauseTransition(Duration.millis(.000001));
@@ -320,10 +355,27 @@ private void startSimulation() {
        
         newX = slantedWall.getEndX() + ball.getRadius();
     }
-
+ if (newY >= horizontalWall.getStartY() && newY <= horizontalWall.getStartY() + 10) {
+            System.out.println("Win");
+        }
   
     ball.setLayoutX(newX);
     ball.setLayoutY(newY);
 }
+ 
+  private void updateHorizontalWallPosition() {
+        double angle = SldShotAngle.getValue();
+        double centerX = 200 + Paneforscene.getWidth();
+        double centerY = 300; 
+
+        
+        double newX1 = centerX - Math.cos(Math.toRadians(angle)) * horizontalWallLength / 2;
+        double newX2 = centerX + Math.cos(Math.toRadians(angle)) * horizontalWallLength / 2;
+
+        horizontalWall.setStartX(newX1);
+        horizontalWall.setEndX(newX2);
+        horizontalWall.setStartY(centerY);
+        horizontalWall.setEndY(centerY);
+    }
 }
 
