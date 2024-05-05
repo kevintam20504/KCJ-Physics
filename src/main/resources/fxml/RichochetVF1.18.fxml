@@ -61,6 +61,6 @@
       </HBox>
    </bottom>
    <center>
-      <Pane fx:id="Paneforscene" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+      <Pane fx:id="Paneforscene" style="-fx-background-image: url('/path/to/your/spacefield_a-000.png'); -fx-background-size: cover;" />
    </center>
 </BorderPane>

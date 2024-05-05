@@ -7,6 +7,7 @@ package Controllers;
 import Main.MainApp;
 import Models.Ball;
 import javafx.animation.AnimationTimer;
+import javafx.animation.PauseTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -15,6 +16,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -22,6 +29,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 /**
  *
@@ -62,8 +70,7 @@ public class RichochetController {
     Slider SldShotAngle;
     
     @FXML
-    
-    Slider SldSWind;
+private Slider SldWind;
 
     private double gravity =.098;
     @FXML
@@ -86,21 +93,29 @@ public class RichochetController {
     private AnimationTimer animationTimer;
 
    @FXML
+   
+   
+   
 public void initialize() {
+    
+     
     createBall();
 Eventhandelers();
      Wanderstellen();
    initializeHandlers();
  
-     SldSpeed.setMin(20);
-    SldSpeed.setMax(80);
-    SldSpeed.setValue(21); 
+     SldSpeed.setMin(5);
+    SldSpeed.setMax(60);
+    SldSpeed.setValue(25); 
     
       SldShotAngle.setMin(0);
     SldShotAngle.setMax(10);
     SldShotAngle.setValue(0);
      SldShotAngle.setBlockIncrement(0.1);
 
+     SldWind.setMin(0);
+     SldWind.setMax(5);
+             SldWind.setValue(0);
   
     SldSpeed.valueProperty().addListener((obs, oldVal, newVal) -> {
         velocityX = newVal.doubleValue();
@@ -111,6 +126,9 @@ Eventhandelers();
         adjustShootingAngle(newVal.doubleValue());
     });*/
 }
+
+
+
 private void createBall() {
  
     ball = new Circle(10);
@@ -118,13 +136,15 @@ private void createBall() {
     ball.setLayoutY(200); 
     Paneforscene.getChildren().add(ball);
 }
+
+/*
 private void adjustShootingAngle(double angle) {
     double angleInRadians = Math.toRadians(angle); 
     double baseSpeed = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
       velocityX = Math.cos(angleInRadians) * baseSpeed;
-      System.out.println("Adjusted velocities -> VelocityX: " + velocityX + ", VelocityY: " + velocityY);
+     // System.out.println("Adjusted velocities -> VelocityX: " + velocityX + ", VelocityY: " + velocityY);
    resetSimulation();
-}
+}*/
 
  private Line slantedWall;
 private final double wallAngle =0; 
@@ -140,7 +160,7 @@ private void Wanderstellen(){
 
     Paneforscene.getChildren().add(slantedWall);
 }
-
+/*
 private void startBallMovement() {
     velocityX = 10;
     velocityY = 0;
@@ -160,7 +180,7 @@ private void startBallMovement() {
         }
     };
     animationTimer.start();
-}
+}*/
 
  private void initializeHandlers() {
         BtnStart.setOnAction(e -> startSimulation());
@@ -186,6 +206,19 @@ BtnStop.setDisable(true);
 private boolean gravityEnabled = false;
 
 private void startSimulation() {
+  //  SldWallAngle.setDisable(true);
+  //  SldSpeed.setDisable(true);
+   // SldShotAngle.setDisable(true);
+   // SldSWind.setDisable(true);
+   
+   double xVelocity = SldSpeed.getValue();
+  // double windspeed = -SldWind.getValue();
+  // double dragCoefficient = 0.1;
+   
+   
+  //  if (animationTimer == null) {
+      //  double dragforce = -dragCoefficient * windspeed;
+   //double dragforce = -dragCoefficient * windspeed;
     if (animationTimer == null) {
         animationTimer = new AnimationTimer() {
             @Override
@@ -195,6 +228,10 @@ private void startSimulation() {
                     velocityY += gravity;
                 }
 
+        //   double   dragforce = -windspeed;
+         //  velocityX += dragforce;
+                 
+                 
                 double newX = ball.getLayoutX() + velocityX;
                 double newY = ball.getLayoutY() + velocityY;
 
@@ -203,22 +240,21 @@ private void startSimulation() {
 
                
                 if (ball.getBoundsInParent().intersects(slantedWall.getBoundsInParent())) {
-                    
-                    gravityEnabled = true;
+    gravityEnabled = true;
 
-                   double wallAngle = -SldWallAngle.getValue();
-   
-
+    double wallAngle = -SldWallAngle.getValue();
     double newAngle = Math.toRadians(2 * wallAngle);
-     double initialUpwardVelocity = 10;  //velocityX*Math.cos(wallAngle) ;  
-    velocityX = Math.cos(newAngle) * 10;
+    double initialUpwardVelocity =  xVelocity *Math.cos(wallAngle); 
+    
+    velocityX = Math.cos(newAngle) * xVelocity;
     velocityY = -Math.abs(Math.sin(newAngle) * initialUpwardVelocity); 
 
-   
     System.out.println("test for new velocities after wall collision -> VelocityX: " + velocityX + ", VelocityY: " + velocityY);
+     //System.out.println("test for new velocities after wall collision -> drag: " + dragforce );
 }
             }
         };
+   // }
     }
     animationTimer.start();
     BtnStart.setDisable(true);
@@ -260,5 +296,34 @@ private void startSimulation() {
         slantedWall.getTransforms().clear();
         slantedWall.getTransforms().add(rotate);
     }
+  
+ public void handle(long now) {
+    if (gravityEnabled) {
+        velocityY += gravity;
+    }
+
+    double newX = ball.getLayoutX() + velocityX;
+    double newY = ball.getLayoutY() + velocityY;
+
+    if (newX - ball.getRadius() < slantedWall.getEndX() && newY >= slantedWall.getStartY() && newY <= slantedWall.getEndY()) {
+       
+        PauseTransition pauseTransition = new PauseTransition(Duration.millis(.000001));
+        pauseTransition.setOnFinished(event -> {
+          
+            double wallAngleRadians = Math.toRadians(wallAngle);
+            double newAngle = wallAngleRadians * 2;
+            velocityX = Math.cos(newAngle) * 10;
+            velocityY = Math.sin(newAngle) * 10;
+        });
+        pauseTransition.play();
+
+       
+        newX = slantedWall.getEndX() + ball.getRadius();
+    }
+
+  
+    ball.setLayoutX(newX);
+    ball.setLayoutY(newY);
+}
 }
 

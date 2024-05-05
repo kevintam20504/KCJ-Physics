@@ -61,6 +61,8 @@ public class FXMLMainMenuController {
         MainApp.switchScene("RichochetVF1.18", new RichochetController());
         stage.sizeToScene();
         stage.centerOnScreen();
+        stage.setMinWidth(1000);
+        stage.setMinHeight(500);
         logger.info("Loaded Richochet scene");
     }
 
