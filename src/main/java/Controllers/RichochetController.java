@@ -51,8 +51,7 @@ public class RichochetController {
     @FXML
     Button BtnStart;
 
-    // @FXML
-   // ToggleButton tgbtnDampingOFF;
+ 
     
     @FXML
     Button BtnStop;
@@ -108,8 +107,16 @@ Eventhandelers();
    initializeHandlers();
    
      createHorizontalWall();
- 
-     SldSpeed.setMin(5);
+     
+       setupSliders();
+       
+        BtnGravity.setSelected(false);
+  BtnGravity.setOnAction(e -> toggleGravity());
+    
+}
+private void setupSliders() {
+
+ SldSpeed.setMin(5);
     SldSpeed.setMax(20);
     SldSpeed.setValue(1); 
     
@@ -133,6 +140,7 @@ Eventhandelers();
     });*/
      
        SldShotAngle.valueProperty().addListener((obs, oldVal, newVal) -> updateHorizontalWallPosition());
+
 }
 
 
@@ -145,14 +153,7 @@ private void createBall() {
     Paneforscene.getChildren().add(ball);
 }
 
-/*
-private void adjustShootingAngle(double angle) {
-    double angleInRadians = Math.toRadians(angle); 
-    double baseSpeed = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
-      velocityX = Math.cos(angleInRadians) * baseSpeed;
-     // System.out.println("Adjusted velocities -> VelocityX: " + velocityX + ", VelocityY: " + velocityY);
-   resetSimulation();
-}*/
+
 
  private void createHorizontalWall() {
         double centerX = 200 + Paneforscene.getWidth();
@@ -178,27 +179,7 @@ private void Wanderstellen(){
 
     Paneforscene.getChildren().add(slantedWall);
 }
-/*
-private void startBallMovement() {
-    velocityX = 10;
-    velocityY = 0;
 
-    animationTimer = new AnimationTimer() {
-        @Override
-        public void handle(long now) {
-            ball.setLayoutX(ball.getLayoutX() + velocityX);
-            ball.setLayoutY(ball.getLayoutY() + velocityY);
-
-            if (ball.getBoundsInParent().intersects(slantedWall.getBoundsInParent())) {
-                double wallAngleRadians = Math.toRadians(wallAngle); 
-                double newAngle = wallAngleRadians * 2;
-                velocityX = Math.cos(newAngle) * 10;
-                velocityY = Math.sin(newAngle) * 10; 
-            }
-        }
-    };
-    animationTimer.start();
-}*/
 
  private void initializeHandlers() {
         BtnStart.setOnAction(e -> startSimulation());
@@ -220,23 +201,20 @@ BtnStop.setDisable(true);
     
 }
 
-// velocity y = velocityx*cos(2*-angle);
-private boolean gravityEnabled = false;
 
-private void startSimulation() {
-  //  SldWallAngle.setDisable(true);
-  //  SldSpeed.setDisable(true);
-   // SldShotAngle.setDisable(true);
-   // SldSWind.setDisable(true);
-   
+
+private boolean gravityEnabled = false;  
+
+private void toggleGravity() {
+    gravityEnabled = BtnGravity.isSelected();
+    System.out.println("Gravity toggled: " + (gravityEnabled ? "On" : "Off"));
+}
+
+
+
+   private void startSimulation() {
    double xVelocity = SldSpeed.getValue();
-  // double windspeed = -SldWind.getValue();
-  // double dragCoefficient = 0.1;
-   
-   
-  //  if (animationTimer == null) {
-      //  double dragforce = -dragCoefficient * windspeed;
-   //double dragforce = -dragCoefficient * windspeed;
+
     if (animationTimer == null) {
         animationTimer = new AnimationTimer() {
             @Override
@@ -249,7 +227,7 @@ private void startSimulation() {
         //   double   dragforce = -windspeed;
          //  velocityX += dragforce;
                  
-                 
+                  applyWindResistance();
                 double newX = ball.getLayoutX() + velocityX;
                 double newY = ball.getLayoutY() + velocityY;
 
@@ -258,7 +236,7 @@ private void startSimulation() {
 
                
                 if (ball.getBoundsInParent().intersects(slantedWall.getBoundsInParent())) {
-    gravityEnabled = true;
+    
 
     double wallAngle = -SldWallAngle.getValue();
     double newAngle = Math.toRadians(2 * wallAngle);
@@ -280,12 +258,6 @@ private void startSimulation() {
     BtnReset.setDisable(false);
 }
   
-  private void updateVerticalVelocity(double angle) {
-
-    double angleInRadians = Math.toRadians(-2 * angle);
-    velocityY = velocityX * Math.cos(angleInRadians);
-    System.out.println("Updated VelocityY: " + velocityY);
-}
 
  private void stopSimulation() {
         if (animationTimer != null) {
@@ -314,6 +286,9 @@ private void startSimulation() {
         slantedWall.getTransforms().clear();
         slantedWall.getTransforms().add(rotate);
     }
+  
+  
+  
   
  public void handle(long now) {
     if (gravityEnabled) {
@@ -363,19 +338,47 @@ private void startSimulation() {
     ball.setLayoutY(newY);
 }
  
-  private void updateHorizontalWallPosition() {
-        double angle = SldShotAngle.getValue();
-        double centerX = 200 + Paneforscene.getWidth();
-        double centerY = 300; 
+ 
+ private double dragCoefficient = 0.05;  
 
-        
-        double newX1 = centerX - Math.cos(Math.toRadians(angle)) * horizontalWallLength / 2;
-        double newX2 = centerX + Math.cos(Math.toRadians(angle)) * horizontalWallLength / 2;
+private void applyWindResistance() {
+    double windSpeed = SldWind.getValue();  
 
-        horizontalWall.setStartX(newX1);
-        horizontalWall.setEndX(newX2);
-        horizontalWall.setStartY(centerY);
-        horizontalWall.setEndY(centerY);
+    double dragForce = -dragCoefficient * windSpeed;
+    velocityX += dragForce;
+    System.out.println("Wind applied with speed: " + windSpeed + ", new VelocityX: " + velocityX);
+}
+ 
+ private double prevShotAngle = 0;
+ private void updateHorizontalWallPosition() {
+    double angle = SldShotAngle.getValue();
+    double deltaAngle = angle - prevShotAngle;
+    double increment = 1; 
+
+  
+    if (deltaAngle > 0) {
+        horizontalWallLength += increment;
+    } else if (deltaAngle < 0) {
+        horizontalWallLength -= increment;
     }
+
+    
+    prevShotAngle = angle;
+
+   
+    if (horizontalWallLength < 0) {
+        horizontalWallLength = 0;
+    }
+    double centerX = 200 + Paneforscene.getWidth();
+    double centerY = 300;
+
+    double newX1 = centerX - Math.cos(Math.toRadians(angle)) * horizontalWallLength / 2;
+    double newX2 = centerX + Math.cos(Math.toRadians(angle)) * horizontalWallLength / 2;
+
+    horizontalWall.setStartX(newX1);
+    horizontalWall.setEndX(newX2);
+    horizontalWall.setStartY(centerY);
+    horizontalWall.setEndY(centerY);
+}
 }
 
