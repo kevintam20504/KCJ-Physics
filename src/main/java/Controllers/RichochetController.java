@@ -98,6 +98,10 @@ private Slider SldWind;
    private Line horizontalWall;
     private double horizontalWallLength = 10;
     
+    
+    
+    
+    
 public void initialize() {
     
      
@@ -152,12 +156,24 @@ private void createBall() {
     ball.setLayoutY(200); 
     Paneforscene.getChildren().add(ball);
 }
-
+ private void resetSimulation() {
+        stopSimulation();
+        ball.setLayoutX(50);
+        ball.setLayoutY(200);
+        velocityX = 0;
+        velocityY = 0;
+        
+        slantedWall.getTransforms().clear();
+    rotateWall(SldWallAngle.getValue());
+        BtnReset.setDisable(true);
+        BtnStart.setDisable(false);
+         startSimulation();
+    }
 
 
  private void createHorizontalWall() {
         double centerX = 200 + Paneforscene.getWidth();
-        double centerY = 300; // Y position of the horizontal wall
+        double centerY = 300; 
 
         horizontalWall = new Line(centerX - horizontalWallLength / 2, centerY, centerX + horizontalWallLength / 2, centerY);
         horizontalWall.setStroke(Color.BLACK);
@@ -267,19 +283,7 @@ private void toggleGravity() {
         BtnStop.setDisable(true);
     }
  
-  private void resetSimulation() {
-        stopSimulation();
-        ball.setLayoutX(50);
-        ball.setLayoutY(150);
-        velocityX = 2;
-        velocityY = 0;
-        
-        slantedWall.getTransforms().clear();
-    rotateWall(SldWallAngle.getValue());
-        BtnReset.setDisable(true);
-        BtnStart.setDisable(false);
-         startSimulation();
-    }
+ 
   
   private void rotateWall(double angle) {
         Rotate rotate = new Rotate(-angle, slantedWall.getStartX(), slantedWall.getStartY());
