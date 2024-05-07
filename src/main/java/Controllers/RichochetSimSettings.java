@@ -4,7 +4,6 @@
  */
 package Controllers;
 
-import Models.Ball;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.control.Button;

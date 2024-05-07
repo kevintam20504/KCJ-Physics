@@ -2,14 +2,21 @@
 package Controllers;
 
 import Main.MainApp;
-import Models.Ball;
+//import Models.Ball;
+import java.io.IOException;
 import java.net.URL;
 import javafx.animation.AnimationTimer;
 import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.control.SplitMenuButton;
@@ -28,40 +35,32 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author JD
  */
 public class RichochetController {
+  
      private Circle projectile;
-    
-   
     
      @FXML
     Pane Paneforscene;
 
-
-
-   
-    
     @FXML
     Button BtnStart;
 
- 
-    
     @FXML
     Button BtnStop;
 
    @FXML
     Button BtnReset;
    
-   
-
       @FXML
     Slider  SldWallAngle ;
    
-
     @FXML
     Slider SldSpeed;
     @FXML
@@ -76,13 +75,13 @@ private Slider SldWind;
 
     @FXML 
     LineChart GrpDistance;
-    
+    //  @FXML
+// LineChart<Number, Number> GrpSpeedX;
+    @FXML 
+    LineChart GrpSpeedX;
+     
      @FXML 
-    LineChart GrpSpeed;
-     
-     
-     
-   
+    LineChart GrpSpeedY;
      
            private Circle ball;
     private double velocityX = 2;
@@ -97,26 +96,43 @@ private Slider SldWind;
    private Line horizontalWall;
     private double horizontalWallLength = 10;
     
-    
-    
-    
+ @FXML
+private void handleExitBtnAction(ActionEvent event) {
+    try {
+        // Close current window
+        Node source = (Node) event.getSource();
+        Stage currentStage  = (Stage) source.getScene().getWindow();
+        currentStage.close();
+
+        // Open Main window
+        MainApp mainApp = new MainApp();
+        mainApp.start(new Stage()); // Assumes MainApp extends Application
+    } catch (Exception e) {
+        
+        // Log the error or print stack trace
+        e.printStackTrace();
+    }
+}
+   
+
+
     
 public void initialize() {
 
-    
-
+  
+//createBottomBorder();
     createBall();
 Eventhandelers();
      Wanderstellen();
    initializeHandlers();
+  // setupDistanceChart();
    
      createHorizontalWall();
      
        setupSliders();
        
         BtnGravity.setSelected(false);
-  BtnGravity.setOnAction(e -> toggleGravity());
-    
+  BtnGravity.setOnAction(e -> toggleGravity());  
 }
 
 
@@ -150,8 +166,6 @@ private void setupSliders() {
 
 }
 
-
-
 private void createBall() {
  
     ball = new Circle(10);
@@ -160,10 +174,6 @@ private void createBall() {
     Paneforscene.getChildren().add(ball);
 }
  
-
-
-
-
 
  private Line slantedWall;
 private final double wallAngle =0; 
@@ -262,8 +272,16 @@ private void toggleGravity() {
         slantedWall.getTransforms().add(rotate);
     }
   
+  private void showWinPopup() {
+    Alert alert = new Alert(Alert.AlertType.INFORMATION); 
+    alert.setTitle("Congratulations");
+    alert.setHeaderText(null); 
+    alert.setContentText("Surprise, you win!");
+
+    alert.showAndWait(); 
+}
   
-  
+ 
   
  public void handle(long now) {
     if (gravityEnabled) {
@@ -277,8 +295,9 @@ private void toggleGravity() {
 
     double distanceX = Math.abs(newX - initialXPosition);
     
+     //updateDistanceChart(distanceX);
      
-    System.out.println("Distance traveled in X: " + distanceX);
+  //  System.out.println("Distance traveled in X: " + distanceX);
     
      if (newY >= initialYPosition) {
   
@@ -287,8 +306,16 @@ private void toggleGravity() {
          startSimulation();
     }
      
+      if (ball.getBoundsInParent().intersects(horizontalWall.getBoundsInParent())) {
+            resetSimulation();
+            showWinPopup();
+            
+      }
+     
      ball.setLayoutX(newX);
     ball.setLayoutY(newY);
+   
+
     
     if (newX - ball.getRadius() < slantedWall.getEndX() && newY >= slantedWall.getStartY() && newY <= slantedWall.getEndY()) {
        
@@ -313,6 +340,16 @@ private void toggleGravity() {
     ball.setLayoutY(newY);
 }
  
+  private void createBottomBorder() {
+    double borderWidth = Paneforscene.getWidth();
+    double borderHeight = 10; 
+    double borderY = Paneforscene.getHeight() - borderHeight; 
+
+    Rectangle bottomBorder = new Rectangle(0, borderY, borderWidth, borderHeight);
+    bottomBorder.setFill(Color.WHITE); 
+
+    Paneforscene.getChildren().add(bottomBorder);
+}
  
  private double dragCoefficient = 0.05;  
 
@@ -321,7 +358,7 @@ private void applyWindResistance() {
 
     double dragForce = -dragCoefficient * windSpeed;
     velocityX += dragForce;
-    System.out.println("Wind applied with speed: " + windSpeed + ", new VelocityX: " + velocityX);
+ //   System.out.println("Wind applied with speed: " + windSpeed + ", new VelocityX: " + velocityX);
 }
  
 
@@ -373,13 +410,21 @@ private void applyWindResistance() {
     prevShotAngle = angle;
 }
  
+ 
+ private long startTime;
   private void startSimulation() {
+      
+      startTime = System.nanoTime();
+      
    double xVelocity = SldSpeed.getValue();
 
     if (animationTimer == null) {
         animationTimer = new AnimationTimer() {
             @Override
             public void handle(long now) {
+                 double timeInSeconds = (now - startTime) / 1_000_000_000.0;
+ 
+             
                 
                 if (gravityEnabled) {
                     velocityY += gravity;
@@ -406,14 +451,17 @@ private void applyWindResistance() {
     velocityX = Math.cos(newAngle) * xVelocity;
     velocityY = -Math.abs(Math.sin(newAngle) * initialUpwardVelocity); 
 
-    System.out.println("test for new velocities after wall collision -> VelocityX: " + velocityX + ", VelocityY: " + velocityY);
+   // System.out.println("test for new velocities after wall collision -> VelocityX: " + velocityX + ", VelocityY: " + velocityY);
      //System.out.println("test for new velocities after wall collision -> drag: " + dragforce );
+     
+     
 }
             }
         };
    // }
     }
     animationTimer.start();
+      //configureUIForSimulationStart();
     SldWallAngle.setDisable(true);
      SldSpeed.setDisable(true);
      SldShotAngle.setDisable(true);
@@ -424,4 +472,9 @@ private void applyWindResistance() {
     BtnStop.setDisable(false);
     BtnReset.setDisable(false);
 }
+  
+  
+ 
+   
+ 
 }
