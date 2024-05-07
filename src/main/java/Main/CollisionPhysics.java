@@ -10,7 +10,6 @@ package Main;
  */
 public class CollisionPhysics {
 
-    private static double distance;//distance between blocks in meters. note the scale is 1m=100pixels
     private long mass1;
     private double velocity1;
     private long mass2;
@@ -27,24 +26,6 @@ public class CollisionPhysics {
         this.mass2 = mass2;
         this.velocity2 = velocity2;
         this.elasticity = elasticity;
-    }
-
-    //gets the time at which the blocks collide
-    public double getCollisionTime() {
-        double time = distance / Math.abs(velocity1 - velocity2);
-        return time;
-    }
-
-    //gets the distance travelled by block1 
-    public double getBlock1DistanceTravelled() {
-        double dist = Math.abs(velocity1) * getCollisionTime();
-        return dist;
-    }
-
-    //gets the distance travelled by block2
-    public double getBlock2DistanceTravelled() {
-        double dist = Math.abs(velocity2) * getCollisionTime();
-        return dist;
     }
 
     //gets velocity of block1 after collision
@@ -77,15 +58,7 @@ public class CollisionPhysics {
         return velocity;
     }
 
-    //getters and setters for distance between blocks,masses,velocities,and elasticity
-    public static double getDistance() {
-        return distance;
-    }
-
-    public static void setDistance(double distance) {
-        CollisionPhysics.distance = distance;
-    }
-
+    //getters and setters for masses,velocities,and elasticity
     public double getMass1() {
         return this.mass1;
     }

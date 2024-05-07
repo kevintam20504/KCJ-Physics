@@ -83,13 +83,19 @@ public class CollisionController {
     LineChart<Number, Number> block2Graph;
 
     @FXML
-    NumberAxis xAxis1;
+    NumberAxis block1TimeAxis;
 
     @FXML
-    NumberAxis xAxis2;
+    NumberAxis block2TimeAxis;
 
-    XYChart.Series<Number, Number> series1 = new XYChart.Series<>();
-    XYChart.Series<Number, Number> series2 = new XYChart.Series<>();
+    @FXML
+    NumberAxis block1VelAxis;
+
+    @FXML
+    NumberAxis block2VelAxis;
+
+    XYChart.Series<Number, Number> series1;
+    XYChart.Series<Number, Number> series2;
 
     CollisionPhysics physics = new CollisionPhysics();
     AnimationTimer animationTimer;
@@ -98,21 +104,13 @@ public class CollisionController {
 
     @FXML
     public void initialize() {
-
-        xAxis1.setForceZeroInRange(false);
-        xAxis2.setForceZeroInRange(false);
-
-        block1Graph.getXAxis().setTickLabelsVisible(false);
-        block1Graph.getXAxis().setOpacity(0);
-        block2Graph.getXAxis().setTickLabelsVisible(false);
-        block2Graph.getXAxis().setOpacity(0);
-
-        block1Graph.getYAxis().setLabel("Block1 Velocity");
-        block2Graph.getYAxis().setLabel("Block2 Velocity");
-        block1Graph.getXAxis().setLabel("Time");
-        block2Graph.getXAxis().setLabel("Time");
-
         updatePhysics();
+        createAnimation();
+
+        series1 = new XYChart.Series<>();
+        series2 = new XYChart.Series<>();
+
+        setupGraphs();
 
         //shows the slider values on the textfields
         mass1Textfield.textProperty().bind(mass1Slider.valueProperty().asString("%.0f" + "kg"));
@@ -158,16 +156,16 @@ public class CollisionController {
         });
     }
 
-    //setting the default values
+    //updates values for collisionPhysics from sliders
     public void updatePhysics() {
         physics.setMass1((long) mass1Slider.getValue());
         physics.setVelocity1(velocity1Slider.getValue());
         physics.setMass2((long) mass2Slider.getValue());
         physics.setVelocity2(velocity2Slider.getValue());
         physics.setElasticity(elasticitySlider.getValue() / 100);
-        CollisionPhysics.setDistance((block2.getLayoutX() - (block1.getLayoutX() + 100.0)) / 100.0);
     }
 
+    //creates the animation
     public void createAnimation() {
         animationTimer = new AnimationTimer() {
             double change1 = physics.getVelocity1();
@@ -186,6 +184,7 @@ public class CollisionController {
                     block1.setTranslateX(block1.getTranslateX() + change1 / 100);
                     block2.setTranslateX(block2.getTranslateX() + change2 / 100);
 
+                    //if blocks collide
                     if (block1.getBoundsInParent().intersects(block2.getBoundsInParent())) {
                         updateGraph(block1Graph, series1, elapsedTime, change1);
                         updateGraph(block2Graph, series2, elapsedTime, change2);
@@ -207,6 +206,7 @@ public class CollisionController {
                         physics.setVelocity2(change2);
                     }
 
+                    //if block1 collides with wall
                     if (block1.getLayoutX() + block1.getTranslateX() < 0.0) {
                         updateGraph(block1Graph, series1, elapsedTime, change1);
                         updateGraph(block2Graph, series2, elapsedTime, change2);
@@ -222,6 +222,7 @@ public class CollisionController {
                         }
                     }
 
+                    //if block2 collides with wall
                     if (block2.getLayoutX() + block2.getTranslateX() > borderPane.getWidth() - block2.getWidth()) {
                         updateGraph(block1Graph, series1, elapsedTime, change1);
                         updateGraph(block2Graph, series2, elapsedTime, change2);
@@ -241,16 +242,44 @@ public class CollisionController {
         };
     }
 
-    void updateGraph(LineChart graph, XYChart.Series<Number, Number> data, double x, double y) {
+    void setupGraphs() {
+        series1.getData().clear();
+        series2.getData().clear();
+        block1Graph.getData().clear();
+        block2Graph.getData().clear();
+
+        //https://docs.oracle.com/javase/8/javafx/api/javafx/scene/chart/NumberAxis.html
+        //makes zero not in range
+        block1TimeAxis.setForceZeroInRange(false);
+        block2TimeAxis.setForceZeroInRange(false);
+
+        //makes ticks not visible
+//        block1TimeAxis.setTickLabelsVisible(false);
+//        block2TimeAxis.setTickLabelsVisible(false);
+
+        //setting labels for the graphs
+        block1VelAxis.setLabel("Block1 Velocity");
+        block2VelAxis.setLabel("Block2 Velocity");
+        block1TimeAxis.setLabel("Time");
+        block2TimeAxis.setLabel("Time");
+
+        block1VelAxis.setLowerBound(-10);
+        block1VelAxis.setUpperBound(10);
+        block2VelAxis.setLowerBound(-10);
+        block2VelAxis.setUpperBound(10);
+    }
+
+    //updates graph with specified values
+    void updateGraph(LineChart graph, XYChart.Series<Number, Number> series, double xValue, double yValue) {
+        //https://docs.oracle.com/javase/8/javafx/api/javafx/scene/chart/LineChart.html
         graph.getData().clear();
+        series.getData().add(new XYChart.Data<>(xValue, yValue));
 
-        data.getData().add(new XYChart.Data<>(x, y));
-
-        if (data.getData().size() > 200) {
-            data.getData().remove(0);
+        //removes data at certain size to graph isn't squeezed
+        if (series.getData().size() > 200) {
+            series.getData().remove(0);
         }
-
-        graph.getData().add(data);
+        graph.getData().add(series);
     }
 
     //if animation is running it pauses, otherwise it plays the animation
@@ -310,6 +339,8 @@ public class CollisionController {
         mass2Slider.setDisable(false);
         velocity2Slider.setDisable(false);
         elasticitySlider.setDisable(false);
+
+        setupGraphs();
 
         //enables resizing window
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

@@ -17,13 +17,13 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane fx:id="borderPane" prefHeight="800.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane fx:id="borderPane" prefHeight="800.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <center>
       <AnchorPane prefHeight="500.0" prefWidth="1600.0" BorderPane.alignment="CENTER">
          <children>
             <Rectangle fx:id="block1" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="100.0" layoutX="300.0" layoutY="300.0" stroke="BLACK" strokeType="INSIDE" width="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="300.0" />
             <Rectangle fx:id="block2" arcHeight="5.0" arcWidth="5.0" fill="#ff1f1f" height="100.0" layoutX="1200.0" layoutY="400.0" stroke="BLACK" strokeType="INSIDE" width="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="300.0" />
-            <TextField fx:id="collisionCountTf" layoutX="1469.0" layoutY="25.0" prefHeight="50.0" prefWidth="100.0" text="0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="25.0" />
+            <TextField fx:id="collisionCountTf" editable="false" layoutX="1469.0" layoutY="25.0" prefHeight="50.0" prefWidth="100.0" text="0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="25.0" />
             <CheckBox fx:id="reflectingBorderCheckBox" layoutX="1475.0" layoutY="93.0" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" selected="true" text="Reflecting Border" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="93.0" />
          </children>
       </AnchorPane>
@@ -45,10 +45,10 @@
                <children>
                   <LineChart fx:id="block1Graph" animated="false" createSymbols="false" legendVisible="false" prefHeight="250.0" prefWidth="550.0" title="Block1" HBox.hgrow="SOMETIMES">
                     <xAxis>
-                      <NumberAxis side="BOTTOM" fx:id="xAxis1" />
+                      <NumberAxis side="BOTTOM" fx:id="block1TimeAxis" />
                     </xAxis>
                     <yAxis>
-                      <NumberAxis side="LEFT" />
+                      <NumberAxis side="LEFT" fx:id="block1VelAxis" />
                     </yAxis>
                   </LineChart>
                   <GridPane hgap="5.0" prefHeight="250.0" prefWidth="500.0" vgap="5.0" HBox.hgrow="SOMETIMES">
@@ -90,10 +90,10 @@
                   </GridPane>
                   <LineChart fx:id="block2Graph" animated="false" createSymbols="false" legendVisible="false" prefHeight="250.0" prefWidth="550.0" title="Block2" HBox.hgrow="SOMETIMES">
                     <xAxis>
-                      <NumberAxis side="BOTTOM" fx:id="xAxis2" />
+                      <NumberAxis side="BOTTOM" fx:id="block2TimeAxis" />
                     </xAxis>
                     <yAxis>
-                      <NumberAxis side="LEFT" />
+                      <NumberAxis side="LEFT" fx:id="block2VelAxis" />
                     </yAxis>
                   </LineChart>
                </children>
