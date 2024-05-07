@@ -58,7 +58,7 @@ public class FXMLMainMenuController {
     @FXML
     void ricochetOnAction(ActionEvent event) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        MainApp.switchScene("RichochetVF1.18", new RichochetController());
+        MainApp.switchScene("RichochetVF1.21", new RichochetController());
         stage.sizeToScene();
         stage.centerOnScreen();
         stage.setMinWidth(1000);
