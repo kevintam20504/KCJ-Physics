@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
@@ -18,14 +17,12 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane fx:id="borderPane" prefHeight="800.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane fx:id="borderPane" prefHeight="800.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <center>
       <AnchorPane prefHeight="500.0" prefWidth="1600.0" BorderPane.alignment="CENTER">
          <children>
             <Rectangle fx:id="block1" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="100.0" layoutX="300.0" layoutY="300.0" stroke="BLACK" strokeType="INSIDE" width="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="300.0" />
             <Rectangle fx:id="block2" arcHeight="5.0" arcWidth="5.0" fill="#ff1f1f" height="100.0" layoutX="1200.0" layoutY="400.0" stroke="BLACK" strokeType="INSIDE" width="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="300.0" />
-            <TextField editable="false" layoutX="14.0" layoutY="25.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="80.0" fx:id="xValue" />
-            <TextField fx:id="yValue" editable="false" layoutX="14.0" layoutY="61.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="80.0" />
             <TextField fx:id="collisionCountTf" layoutX="1469.0" layoutY="25.0" prefHeight="50.0" prefWidth="100.0" text="0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="25.0" />
             <CheckBox fx:id="reflectingBorderCheckBox" layoutX="1475.0" layoutY="93.0" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" selected="true" text="Reflecting Border" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="93.0" />
          </children>
@@ -46,9 +43,9 @@
             </HBox>
             <HBox prefHeight="250.0" prefWidth="1600.0">
                <children>
-                  <LineChart fx:id="block1Graph" prefHeight="250.0" prefWidth="550.0" HBox.hgrow="SOMETIMES">
+                  <LineChart fx:id="block1Graph" animated="false" createSymbols="false" legendVisible="false" prefHeight="250.0" prefWidth="550.0" title="Block1" HBox.hgrow="SOMETIMES">
                     <xAxis>
-                      <CategoryAxis side="BOTTOM" />
+                      <NumberAxis side="BOTTOM" fx:id="xAxis1" />
                     </xAxis>
                     <yAxis>
                       <NumberAxis side="LEFT" />
@@ -73,9 +70,9 @@
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Mass 2" GridPane.rowIndex="2" />
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Velocity 2" GridPane.rowIndex="3" />
                         <Slider fx:id="mass1Slider" blockIncrement="1.0" majorTickUnit="200.0" max="1000.0" min="1.0" showTickLabels="true" showTickMarks="true" value="100.0" GridPane.columnIndex="1" />
-                        <Slider fx:id="velocity1Slider" blockIncrement="0.1" majorTickUnit="2.0" max="10.0" min="-10.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" value="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Slider fx:id="mass2Slider" blockIncrement="1.0" majorTickUnit="200.0" max="1000.0" min="1.0" showTickLabels="true" showTickMarks="true" value="1.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" />
-                        <Slider fx:id="velocity2Slider" blockIncrement="0.1" majorTickUnit="2.0" max="10.0" min="-10.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" value="0.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Slider fx:id="velocity1Slider" blockIncrement="0.1" majorTickUnit="2.0" max="10.0" min="-10.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" value="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Slider fx:id="mass2Slider" blockIncrement="1.0" majorTickUnit="200.0" max="1000.0" min="1.0" showTickLabels="true" showTickMarks="true" value="200.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" />
+                        <Slider fx:id="velocity2Slider" blockIncrement="0.1" majorTickUnit="2.0" max="10.0" min="-10.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" value="-5.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <TextField fx:id="mass1Textfield" editable="false" GridPane.columnIndex="2" />
                         <TextField fx:id="velocity1Textfield" editable="false" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                         <TextField fx:id="mass2Textfield" editable="false" GridPane.columnIndex="2" GridPane.rowIndex="2" />
@@ -91,9 +88,9 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
                   </GridPane>
-                  <LineChart fx:id="block2Graph" prefHeight="250.0" prefWidth="550.0" HBox.hgrow="SOMETIMES">
+                  <LineChart fx:id="block2Graph" animated="false" createSymbols="false" legendVisible="false" prefHeight="250.0" prefWidth="550.0" title="Block2" HBox.hgrow="SOMETIMES">
                     <xAxis>
-                      <CategoryAxis side="BOTTOM" />
+                      <NumberAxis side="BOTTOM" fx:id="xAxis2" />
                     </xAxis>
                     <yAxis>
                       <NumberAxis side="LEFT" />
