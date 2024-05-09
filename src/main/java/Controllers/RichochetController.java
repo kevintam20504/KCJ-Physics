@@ -158,65 +158,7 @@ Eventhandelers();
   BtnGravity.setOnAction(e -> toggleGravity());  
 }
 
- public void handle(long now) {
-    if (gravityEnabled) {
-        velocityY += gravity;
-    }
-    
-     
- double timeInSeconds = (now - startTime) / 1_000_000_000.0;
-    double newX = ball.getLayoutX() + velocityX;
-    double newY = ball.getLayoutY() + velocityY;
-    
-    double distanceX = Math.abs(newX - initialXPosition);
-  
-  double currentVelocityX = velocityX;
-   
-    
-     //updateDistanceChart(distanceX);
-     
-   // System.out.println("Distance traveled in X: " + distanceX);
-    
-     if (newY >= initialYPosition) {
-  
-        animationTimer.stop();
-       // System.out.println("Ball returned to or passed initial y position."+distanceX);
-         startSimulation();
-    }
-     
-      if (ball.getBoundsInParent().intersects(horizontalWall.getBoundsInParent())) {
-            resetSimulation();
-            showWinPopup();
-            
-      }
-     
-     ball.setLayoutX(newX);
-    ball.setLayoutY(newY);
-   
 
-    
-    if (newX - ball.getRadius() < slantedWall.getEndX() && newY >= slantedWall.getStartY() && newY <= slantedWall.getEndY()) {
-       
-        PauseTransition pauseTransition = new PauseTransition(Duration.millis(.000001));
-        pauseTransition.setOnFinished(event -> {
-          
-            double wallAngleRadians = Math.toRadians(wallAngle);
-            double newAngle = wallAngleRadians * 2;
-            velocityX = Math.cos(newAngle) * 10;
-            velocityY = Math.sin(newAngle) * 10;
-        });
-        pauseTransition.play();
-
-       
-        newX = slantedWall.getEndX() + ball.getRadius();
-    }
- if (newY >= horizontalWall.getStartY() && newY <= horizontalWall.getStartY() + 10) {
-            System.out.println("Win");
-        }
-  
-    ball.setLayoutX(newX);
-    ball.setLayoutY(newY);
-}
     
 private void setupSliders() {
 
@@ -410,7 +352,7 @@ private void applyWindResistance() {
  private void createHorizontalWall() {
         double centerX = 200 + Paneforscene.getWidth();
         double centerY = 300; 
-  horizontalWallLength = 10; 
+  horizontalWallLength = 70; 
        horizontalWall = new Line(centerX - horizontalWallLength / 2, centerY, centerX + horizontalWallLength / 2, centerY);
     horizontalWall.setStroke(Color.BLACK);
     Paneforscene.getChildren().add(horizontalWall);
@@ -470,6 +412,21 @@ private void applyWindResistance() {
                 
                 double newX = ball.getLayoutX() + velocityX;
                 double newY = ball.getLayoutY() + velocityY;
+                
+                if (newY >= initialYPosition) {
+  
+        animationTimer.stop();
+       // System.out.println("Ball returned to or passed initial y position."+distanceX);
+         startSimulation();
+    }
+                
+            //     if (ball.getBoundsInParent().intersects(horizontalWall.getBoundsInParent())) {
+          //  resetSimulation();
+          //  showWinPopup();
+          ///  
+     // }
+          
+                
                 double distanceX = Math.abs(newX - initialXPosition);
                 
                 double elapsedTime = (System.currentTimeMillis() - startTime) / 1000;
@@ -522,6 +479,66 @@ private void applyWindResistance() {
 }
   
   
+ public void handle(long now) {
+    if (gravityEnabled) {
+        velocityY += gravity;
+    }
+    
+     
+ double timeInSeconds = (now - startTime) / 1_000_000_000.0;
+    double newX = ball.getLayoutX() + velocityX;
+    double newY = ball.getLayoutY() + velocityY;
+    
+    double distanceX = Math.abs(newX - initialXPosition);
+  
+  double currentVelocityX = velocityX;
+   
+    
+     //updateDistanceChart(distanceX);
+     
+   // System.out.println("Distance traveled in X: " + distanceX);
+    
+     if (newY >= initialYPosition) {
+  
+        animationTimer.stop();
+       // System.out.println("Ball returned to or passed initial y position."+distanceX);
+         startSimulation();
+    }
+     
+      if (ball.getBoundsInParent().intersects(horizontalWall.getBoundsInParent())) {
+           
+            showWinPopup();
+             resetSimulation();
+            
+      }
+     
+     ball.setLayoutX(newX);
+    ball.setLayoutY(newY);
+   
+
+    
+    if (newX - ball.getRadius() < slantedWall.getEndX() && newY >= slantedWall.getStartY() && newY <= slantedWall.getEndY()) {
+       
+        PauseTransition pauseTransition = new PauseTransition(Duration.millis(.01));
+        pauseTransition.setOnFinished(event -> {
+          
+            double wallAngleRadians = Math.toRadians(wallAngle);
+            double newAngle = wallAngleRadians * 2;
+            velocityX = Math.cos(newAngle) * 10;
+            velocityY = Math.sin(newAngle) * 10;
+        });
+        pauseTransition.play();
+
+       
+        newX = slantedWall.getEndX() + ball.getRadius();
+    }
+ if (newY >= horizontalWall.getStartY() && newY <= horizontalWall.getStartY() + 10) {
+            System.out.println("Win");
+        }
+  
+    ball.setLayoutX(newX);
+    ball.setLayoutY(newY);
+}
 
    
  
