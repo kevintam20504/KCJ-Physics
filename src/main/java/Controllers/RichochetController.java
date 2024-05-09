@@ -15,6 +15,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -73,15 +74,35 @@ private Slider SldWind;
     @FXML
     ToggleButton BtnGravity;
 
-    @FXML 
-    LineChart GrpDistance;
-    //  @FXML
-// LineChart<Number, Number> GrpSpeedX;
-    @FXML 
-    LineChart GrpSpeedX;
-     
-     @FXML 
-    LineChart GrpSpeedY;
+    
+    @FXML
+    LineChart<Number, Number> GrpDistance;
+    
+       @FXML
+    NumberAxis Time1Axis;
+       
+        @FXML
+    NumberAxis Distance1Axis;
+    
+    @FXML
+    LineChart<Number, Number> GrpSpeedX;
+    
+     @FXML
+    NumberAxis Time2Axis;
+       @FXML
+    NumberAxis DistanceXAxis;
+    
+    @FXML
+    LineChart<Number, Number> GrpSpeedY;
+      @FXML
+    NumberAxis DistanceYAxis;
+    
+     @FXML
+    NumberAxis Time3Axis;
+    
+    XYChart.Series<Number, Number> series1;
+    XYChart.Series<Number, Number> series2;
+   
      
            private Circle ball;
     private double velocityX = 2;
@@ -96,6 +117,8 @@ private Slider SldWind;
    private Line horizontalWall;
     private double horizontalWallLength = 10;
     
+    
+   
  @FXML
 private void handleExitBtnAction(ActionEvent event) {
     try {
@@ -104,12 +127,12 @@ private void handleExitBtnAction(ActionEvent event) {
         Stage currentStage  = (Stage) source.getScene().getWindow();
         currentStage.close();
 
-        // Open Main window
+     
         MainApp mainApp = new MainApp();
-        mainApp.start(new Stage()); // Assumes MainApp extends Application
+        mainApp.start(new Stage());
     } catch (Exception e) {
         
-        // Log the error or print stack trace
+     
         e.printStackTrace();
     }
 }
@@ -118,8 +141,18 @@ private void handleExitBtnAction(ActionEvent event) {
 
     
 public void initialize() {
+    
+    
 
-  
+    series1 = new XYChart.Series<Number, Number>();
+    GrpDistance.getData().add(series1);
+    
+    series2 = new XYChart.Series<Number, Number>();
+    GrpSpeedX.getData().add(series2);
+    
+    
+    
+    setupGraphs();
 //createBottomBorder();
     createBall();
 Eventhandelers();
@@ -135,8 +168,91 @@ Eventhandelers();
   BtnGravity.setOnAction(e -> toggleGravity());  
 }
 
+ public void handle(long now) {
+    if (gravityEnabled) {
+        velocityY += gravity;
+    }
+    
+     
+ double timeInSeconds = (now - startTime) / 1_000_000_000.0;
+    double newX = ball.getLayoutX() + velocityX;
+    double newY = ball.getLayoutY() + velocityY;
+    
+    double distanceX = Math.abs(newX - initialXPosition);
+  updateDistanceGraph(timeInSeconds, distanceX);
+  
+  double currentVelocityX = velocityX;
+   updateVelocityGraph(timeInSeconds, currentVelocityX);
+   
+    
+     //updateDistanceChart(distanceX);
+     
+   // System.out.println("Distance traveled in X: " + distanceX);
+    
+     if (newY >= initialYPosition) {
+  
+        animationTimer.stop();
+       // System.out.println("Ball returned to or passed initial y position."+distanceX);
+         startSimulation();
+    }
+     
+      if (ball.getBoundsInParent().intersects(horizontalWall.getBoundsInParent())) {
+            resetSimulation();
+            showWinPopup();
+            
+      }
+     
+     ball.setLayoutX(newX);
+    ball.setLayoutY(newY);
+   
+
+    
+    if (newX - ball.getRadius() < slantedWall.getEndX() && newY >= slantedWall.getStartY() && newY <= slantedWall.getEndY()) {
+       
+        PauseTransition pauseTransition = new PauseTransition(Duration.millis(.000001));
+        pauseTransition.setOnFinished(event -> {
+          
+            double wallAngleRadians = Math.toRadians(wallAngle);
+            double newAngle = wallAngleRadians * 2;
+            velocityX = Math.cos(newAngle) * 10;
+            velocityY = Math.sin(newAngle) * 10;
+        });
+        pauseTransition.play();
+
+       
+        newX = slantedWall.getEndX() + ball.getRadius();
+    }
+ if (newY >= horizontalWall.getStartY() && newY <= horizontalWall.getStartY() + 10) {
+            System.out.println("Win");
+        }
+  
+    ball.setLayoutX(newX);
+    ball.setLayoutY(newY);
+}
 
 
+private void updateDistanceGraph(double time, double distance) {
+    // Here, 'time' could be your X-axis value and 'distance' your Y-axis value
+    Platform.runLater(() -> {
+        series1.getData().add(new XYChart.Data<>(time, distance));
+        
+        // Optionally, limit the number of points to avoid performance issues
+        if (series1.getData().size() > 100) {
+            series1.getData().remove(0);
+        }
+    });
+}
+
+private void updateVelocityGraph(double time, double velocityX) {
+    Platform.runLater(() -> {
+        series2.getData().add(new XYChart.Data<>(time, velocityX));
+        
+        // Optionally, limit the number of points to avoid performance issues
+        if (series2.getData().size() > 100) {
+            series2.getData().remove(0);
+        }
+    });
+}
 private void setupSliders() {
 
  SldSpeed.setMin(5);
@@ -247,6 +363,10 @@ private void toggleGravity() {
      velocityX = 0;
     velocityY = 0;
  
+     Platform.runLater(() -> {
+        series1.getData().clear();
+        series2.getData().clear();
+    });
      BtnGravity.setSelected(false);
      toggleGravity();
          slantedWall.getTransforms().clear();
@@ -281,76 +401,16 @@ private void toggleGravity() {
     alert.showAndWait(); 
 }
   
- 
   
- public void handle(long now) {
-    if (gravityEnabled) {
-        velocityY += gravity;
-    }
-    
-     
-
-    double newX = ball.getLayoutX() + velocityX;
-    double newY = ball.getLayoutY() + velocityY;
-
-    double distanceX = Math.abs(newX - initialXPosition);
-    
-     //updateDistanceChart(distanceX);
-     
-  //  System.out.println("Distance traveled in X: " + distanceX);
-    
-     if (newY >= initialYPosition) {
   
-        animationTimer.stop();
-        System.out.println("Ball returned to or passed initial y position."+distanceX);
-         startSimulation();
-    }
-     
-      if (ball.getBoundsInParent().intersects(horizontalWall.getBoundsInParent())) {
-            resetSimulation();
-            showWinPopup();
-            
-      }
-     
-     ball.setLayoutX(newX);
-    ball.setLayoutY(newY);
-   
-
-    
-    if (newX - ball.getRadius() < slantedWall.getEndX() && newY >= slantedWall.getStartY() && newY <= slantedWall.getEndY()) {
+   void setupGraphs() {
        
-        PauseTransition pauseTransition = new PauseTransition(Duration.millis(.000001));
-        pauseTransition.setOnFinished(event -> {
-          
-            double wallAngleRadians = Math.toRadians(wallAngle);
-            double newAngle = wallAngleRadians * 2;
-            velocityX = Math.cos(newAngle) * 10;
-            velocityY = Math.sin(newAngle) * 10;
-        });
-        pauseTransition.play();
-
+        Time1Axis.setForceZeroInRange(false);
        
-        newX = slantedWall.getEndX() + ball.getRadius();
+
     }
- if (newY >= horizontalWall.getStartY() && newY <= horizontalWall.getStartY() + 10) {
-            System.out.println("Win");
-        }
   
-    ball.setLayoutX(newX);
-    ball.setLayoutY(newY);
-}
- 
-  private void createBottomBorder() {
-    double borderWidth = Paneforscene.getWidth();
-    double borderHeight = 10; 
-    double borderY = Paneforscene.getHeight() - borderHeight; 
 
-    Rectangle bottomBorder = new Rectangle(0, borderY, borderWidth, borderHeight);
-    bottomBorder.setFill(Color.WHITE); 
-
-    Paneforscene.getChildren().add(bottomBorder);
-}
- 
  private double dragCoefficient = 0.05;  
 
 private void applyWindResistance() {
@@ -422,17 +482,11 @@ private void applyWindResistance() {
         animationTimer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                 double timeInSeconds = (now - startTime) / 1_000_000_000.0;
- 
-             
                 
                 if (gravityEnabled) {
                     velocityY += gravity;
                 }
 
-        //   double   dragforce = -windspeed;
-         //  velocityX += dragforce;
-                 
                   applyWindResistance();
                 double newX = ball.getLayoutX() + velocityX;
                 double newY = ball.getLayoutY() + velocityY;
@@ -452,7 +506,7 @@ private void applyWindResistance() {
     velocityY = -Math.abs(Math.sin(newAngle) * initialUpwardVelocity); 
 
    // System.out.println("test for new velocities after wall collision -> VelocityX: " + velocityX + ", VelocityY: " + velocityY);
-     //System.out.println("test for new velocities after wall collision -> drag: " + dragforce );
+    // System.out.println("test for new velocities after wall collision -> drag: " + dragforce );
      
      
 }
@@ -474,7 +528,7 @@ private void applyWindResistance() {
 }
   
   
- 
+
    
  
 }

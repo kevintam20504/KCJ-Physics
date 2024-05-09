@@ -35,26 +35,26 @@
          <children>
             <LineChart fx:id="GrpDistance" layoutX="10.0" layoutY="10.0" prefHeight="150.0" prefWidth="206.0" title="Distance">
                <xAxis>
-                  <CategoryAxis side="BOTTOM" />
+                   <NumberAxis side="BOTTOM" fx:id="Time1Axis" />
                </xAxis>
                <yAxis>
-                  <NumberAxis side="LEFT" />
+                   <NumberAxis side="LEFT" fx:id="Distance1Axis" />
                </yAxis>
             </LineChart>
             <LineChart fx:id="GrpSpeedX" prefHeight="150.0" prefWidth="206.0" title=" Speed X">
               <xAxis>
-                <CategoryAxis side="BOTTOM" />
+                <NumberAxis side="BOTTOM" fx:id="Time2Axis" />
               </xAxis>
               <yAxis>
-                <NumberAxis side="LEFT" />
+                 <NumberAxis side="LEFT" fx:id="VelocityXAxis" />
               </yAxis>
             </LineChart>
             <LineChart fx:id="GrpSpeedY" title="Speed Y">
               <xAxis>
-                <CategoryAxis side="BOTTOM" />
+                <NumberAxis side="BOTTOM" fx:id="Time3Axis" />
               </xAxis>
               <yAxis>
-                <NumberAxis side="LEFT" />
+                  <NumberAxis side="LEFT" fx:id="VelocityYAxis" />
               </yAxis>
             </LineChart>
          </children>
