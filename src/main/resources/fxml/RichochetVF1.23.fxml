@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
@@ -11,7 +10,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="541.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="541.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <right>
       <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
@@ -33,28 +32,28 @@
    <bottom>
       <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <LineChart fx:id="GrpDistance" layoutX="10.0" layoutY="10.0" prefHeight="150.0" prefWidth="206.0" title="Distance">
+            <LineChart fx:id="GrpDistance" animated="false" createSymbols="false" layoutX="10.0" layoutY="10.0" legendVisible="false" prefHeight="150.0" prefWidth="206.0" title="Distance">
                <xAxis>
-                   <NumberAxis side="BOTTOM" fx:id="Time1Axis" />
+                   <NumberAxis fx:id="Time1Axis" side="BOTTOM" />
                </xAxis>
                <yAxis>
-                   <NumberAxis side="LEFT" fx:id="Distance1Axis" />
+                   <NumberAxis fx:id="Distance1Axis" side="LEFT" />
                </yAxis>
             </LineChart>
-            <LineChart fx:id="GrpSpeedX" prefHeight="150.0" prefWidth="206.0" title=" Speed X">
+            <LineChart fx:id="GrpSpeedX" animated="false" createSymbols="false" legendVisible="false" prefHeight="150.0" prefWidth="206.0" title=" Speed X">
               <xAxis>
-                <NumberAxis side="BOTTOM" fx:id="Time2Axis" />
+                <NumberAxis fx:id="Time2Axis" side="BOTTOM" />
               </xAxis>
               <yAxis>
-                 <NumberAxis side="LEFT" fx:id="VelocityXAxis" />
+                 <NumberAxis fx:id="VelocityXAxis" side="LEFT" />
               </yAxis>
             </LineChart>
-            <LineChart fx:id="GrpSpeedY" title="Speed Y">
+            <LineChart fx:id="GrpSpeedY" animated="false" createSymbols="false" legendVisible="false" title="Speed Y">
               <xAxis>
-                <NumberAxis side="BOTTOM" fx:id="Time3Axis" />
+                <NumberAxis fx:id="Time3Axis" side="BOTTOM" />
               </xAxis>
               <yAxis>
-                  <NumberAxis side="LEFT" fx:id="VelocityYAxis" />
+                  <NumberAxis fx:id="VelocityYAxis" side="LEFT" />
               </yAxis>
             </LineChart>
          </children>

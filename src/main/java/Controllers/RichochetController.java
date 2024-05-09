@@ -68,7 +68,7 @@ public class RichochetController {
     Slider SldShotAngle;
     
     @FXML
-private Slider SldWind;
+    private Slider SldWind;
 
     private double gravity =.098;
     @FXML
@@ -97,11 +97,12 @@ private Slider SldWind;
       @FXML
     NumberAxis DistanceYAxis;
     
-     @FXML
+    @FXML
     NumberAxis Time3Axis;
     
-    XYChart.Series<Number, Number> series1;
-    XYChart.Series<Number, Number> series2;
+    XYChart.Series<Number, Number> series1 = new XYChart.Series<>();
+    XYChart.Series<Number, Number> series2 = new XYChart.Series<>();
+    XYChart.Series<Number, Number> series3 = new XYChart.Series<>();
    
      
            private Circle ball;
@@ -142,23 +143,12 @@ private void handleExitBtnAction(ActionEvent event) {
     
 public void initialize() {
     
-    
-
-    series1 = new XYChart.Series<Number, Number>();
-    GrpDistance.getData().add(series1);
-    
-    series2 = new XYChart.Series<Number, Number>();
-    GrpSpeedX.getData().add(series2);
-    
-    
-    
     setupGraphs();
 //createBottomBorder();
     createBall();
 Eventhandelers();
      Wanderstellen();
    initializeHandlers();
-  // setupDistanceChart();
    
      createHorizontalWall();
      
@@ -179,10 +169,8 @@ Eventhandelers();
     double newY = ball.getLayoutY() + velocityY;
     
     double distanceX = Math.abs(newX - initialXPosition);
-  updateDistanceGraph(timeInSeconds, distanceX);
   
   double currentVelocityX = velocityX;
-   updateVelocityGraph(timeInSeconds, currentVelocityX);
    
     
      //updateDistanceChart(distanceX);
@@ -229,30 +217,7 @@ Eventhandelers();
     ball.setLayoutX(newX);
     ball.setLayoutY(newY);
 }
-
-
-private void updateDistanceGraph(double time, double distance) {
-    // Here, 'time' could be your X-axis value and 'distance' your Y-axis value
-    Platform.runLater(() -> {
-        series1.getData().add(new XYChart.Data<>(time, distance));
-        
-        // Optionally, limit the number of points to avoid performance issues
-        if (series1.getData().size() > 100) {
-            series1.getData().remove(0);
-        }
-    });
-}
-
-private void updateVelocityGraph(double time, double velocityX) {
-    Platform.runLater(() -> {
-        series2.getData().add(new XYChart.Data<>(time, velocityX));
-        
-        // Optionally, limit the number of points to avoid performance issues
-        if (series2.getData().size() > 100) {
-            series2.getData().remove(0);
-        }
-    });
-}
+    
 private void setupSliders() {
 
  SldSpeed.setMin(5);
@@ -363,10 +328,7 @@ private void toggleGravity() {
      velocityX = 0;
     velocityY = 0;
  
-     Platform.runLater(() -> {
-        series1.getData().clear();
-        series2.getData().clear();
-    });
+  
      BtnGravity.setSelected(false);
      toggleGravity();
          slantedWall.getTransforms().clear();
@@ -381,6 +343,8 @@ private void toggleGravity() {
      SldShotAngle.setDisable(false);
      SldWind.setDisable(false);
      BtnGravity.setDisable(false);
+     
+     setupGraphs();
         
     }
  
@@ -405,9 +369,30 @@ private void toggleGravity() {
   
    void setupGraphs() {
        
+       series1.getData().clear();
+        series2.getData().clear();
+        series3.getData().clear();
+        GrpDistance.getData().clear();
+        GrpSpeedX.getData().clear();
+        GrpSpeedY.getData().clear();
+       
         Time1Axis.setForceZeroInRange(false);
+        Time2Axis.setForceZeroInRange(false);
+        Time3Axis.setForceZeroInRange(false);
        
 
+    }
+   
+   //updates graph with specified values
+    void updateGraph(LineChart graph, XYChart.Series<Number, Number> series, double xValue, double yValue) {
+        graph.getData().clear();
+        series.getData().add(new XYChart.Data<>(xValue, yValue));
+
+        //removes data at certain size to graph isn't squeezed
+        if (series.getData().size() > 20) {
+            series.getData().remove(0);
+        }
+        graph.getData().add(series);
     }
   
 
@@ -474,7 +459,7 @@ private void applyWindResistance() {
  private long startTime;
   private void startSimulation() {
       
-      startTime = System.nanoTime();
+      double startTime = System.currentTimeMillis();
       
    double xVelocity = SldSpeed.getValue();
 
@@ -483,13 +468,22 @@ private void applyWindResistance() {
             @Override
             public void handle(long now) {
                 
+                double newX = ball.getLayoutX() + velocityX;
+                double newY = ball.getLayoutY() + velocityY;
+                double distanceX = Math.abs(newX - initialXPosition);
+                
+                double elapsedTime = (System.currentTimeMillis() - startTime) / 1000;
+                
+                updateGraph(GrpDistance, series1, elapsedTime, distanceX);
+                updateGraph(GrpSpeedX, series2, elapsedTime, velocityX);
+                updateGraph(GrpSpeedY, series3, elapsedTime, velocityY);
+                
+                
                 if (gravityEnabled) {
                     velocityY += gravity;
                 }
-
-                  applyWindResistance();
-                double newX = ball.getLayoutX() + velocityX;
-                double newY = ball.getLayoutY() + velocityY;
+                
+                applyWindResistance();
 
                 ball.setLayoutX(newX);
                 ball.setLayoutY(newY);
