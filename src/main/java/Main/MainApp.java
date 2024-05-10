@@ -31,6 +31,7 @@ public class MainApp extends Application {
             primaryStage.setAlwaysOnTop(true);
             primaryStage.show();
             primaryStage.setAlwaysOnTop(false);
+            primaryStage.setTitle("KCJ Physics");
         } catch (IOException ex) {
             logger.error(ex.getMessage(), ex);
         }

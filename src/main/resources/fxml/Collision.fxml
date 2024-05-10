@@ -28,11 +28,13 @@
             <TextField fx:id="collisionCountTf" editable="false" layoutX="1475.0" layoutY="14.0" prefHeight="43.0" prefWidth="106.0" text="0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="14.0">
                <font>
                   <Font size="18.0" />
-               </font></TextField>
+               </font>
+            </TextField>
             <CheckBox fx:id="reflectingBorderCheckBox" layoutX="1460.0" layoutY="73.0" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" text="Reflecting Border" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="75.0">
                <font>
                   <Font size="14.0" />
-               </font></CheckBox>
+               </font>
+            </CheckBox>
             <TextField fx:id="timerTf" editable="false" layoutX="14.0" layoutY="14.0" prefHeight="50.0" prefWidth="125.0" text="0">
                <font>
                   <Font size="18.0" />
@@ -49,19 +51,19 @@
    <bottom>
       <VBox BorderPane.alignment="CENTER">
          <children>
-            <HBox alignment="CENTER" prefHeight="50.0" prefWidth="1600.0" spacing="15.0" style="-fx-background-color: grey;">
+            <HBox alignment="CENTER" prefHeight="50.0" prefWidth="1600.0" spacing="15.0" style="-fx-background-color: grey; -fx-border-width: 2; -fx-border-color: black;">
                <children>
-                  <Button mnemonicParsing="false" onAction="#resetButtonOnAction" prefHeight="30.0" prefWidth="77.0" text="Reset" />
-                  <Button mnemonicParsing="false" onAction="#startStopButtonOnAction" prefHeight="30.0" prefWidth="77.0" text="Start/Stop" />
-                  <Button mnemonicParsing="false" onAction="#exitButtonOnAction" prefHeight="30.0" prefWidth="77.0" text="Exit" />
+                  <Button mnemonicParsing="false" onAction="#resetButtonOnAction" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #1abbffc7;" text="Reset" />
+                  <Button mnemonicParsing="false" onAction="#startStopButtonOnAction" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #1fff4bbf;" text="Start/Stop" />
+                  <Button mnemonicParsing="false" onAction="#exitButtonOnAction" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #ff21219a;" text="Exit" />
                </children>
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding>
             </HBox>
-            <HBox prefHeight="250.0" prefWidth="1600.0">
+            <HBox prefHeight="250.0" prefWidth="1600.0" style="-fx-border-color: black; -fx-border-width: 2;">
                <children>
-                  <LineChart fx:id="block1Graph" animated="false" createSymbols="false" legendVisible="false" prefHeight="250.0" prefWidth="550.0" title="Blue Block" HBox.hgrow="SOMETIMES">
+                  <LineChart fx:id="block1Graph" animated="false" createSymbols="false" legendVisible="false" prefHeight="250.0" prefWidth="550.0" style="-fx-background-color: #1f93ff4c; -fx-border-width: 2; -fx-border-color: #007cf07f;" title="Blue Block" HBox.hgrow="SOMETIMES">
                     <xAxis>
                       <NumberAxis fx:id="block1TimeAxis" label="Time" side="BOTTOM" />
                     </xAxis>
@@ -106,7 +108,7 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
                   </GridPane>
-                  <LineChart fx:id="block2Graph" animated="false" createSymbols="false" legendVisible="false" prefHeight="250.0" prefWidth="550.0" title="Red Block" HBox.hgrow="SOMETIMES">
+                  <LineChart fx:id="block2Graph" animated="false" createSymbols="false" legendVisible="false" prefHeight="250.0" prefWidth="550.0" style="-fx-background-color: #ff21214c; -fx-border-width: 2; -fx-border-color: #ff000080;" title="Red Block" HBox.hgrow="SOMETIMES">
                     <xAxis>
                       <NumberAxis fx:id="block2TimeAxis" label="Time" lowerBound="-10.0" side="BOTTOM" upperBound="10.0" />
                     </xAxis>

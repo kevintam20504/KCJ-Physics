@@ -177,6 +177,7 @@ public class CollisionController {
 
             @Override
             public void handle(long now) {
+                //updates elapsed time and timer
                 elapsedTime = lastUpdate + (System.currentTimeMillis() - startTime) / 1000;
                 timerTf.setText(String.valueOf(Math.round(elapsedTime * 100) / 100.0));
 
@@ -184,6 +185,7 @@ public class CollisionController {
                 updateGraph(block2Graph, series2, elapsedTime, velocity2);
 
                 for (int i = 0; i < 100; i++) {
+                    //moves blocks
                     block1.setTranslateX(block1.getTranslateX() + velocity1 / 100);
                     block2.setTranslateX(block2.getTranslateX() + velocity2 / 100);
 
@@ -202,9 +204,11 @@ public class CollisionController {
                             animationTimer.stop();
                         } else {
                             collisionCountTf.setText(String.valueOf(++collisionCount));
+                            //sets the velocity to the velocity after collision
                             velocity1 = physics.getVelocity1Final();
                             velocity2 = physics.getVelocity2Final();
                         }
+                        //updates the initial velocity
                         physics.setVelocity1(velocity1);
                         physics.setVelocity2(velocity2);
                     }
@@ -219,6 +223,7 @@ public class CollisionController {
                             if (physics.getElasticity() < 1 && -velocity1 < 0.1) {
                                 velocity1 = 0;
                             } else {
+                                //makes velocity in opposite direction and adjusts velocity depending on elasticity
                                 velocity1 = -velocity1 * physics.getElasticity();
                             }
                             physics.setVelocity1(velocity1);
@@ -235,6 +240,7 @@ public class CollisionController {
                             if (physics.getElasticity() < 1 && velocity2 < 0.1) {
                                 velocity2 = 0;
                             } else {
+                                //makes velocity in opposite direction and adjusts velocity depending on elasticity
                                 velocity2 = -velocity2 * physics.getElasticity();
                             }
                             physics.setVelocity2(velocity2);
