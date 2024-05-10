@@ -16,6 +16,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -66,6 +67,13 @@ public class GravityController {
      
      @FXML
      Button ExitBtn;
+     
+      @FXML
+     Label SpeedTracker;
+       
+     @FXML
+     Label DistanceTracker;
+     
   
     private TranslateTransition transition;
    @FXML
@@ -131,12 +139,13 @@ private void handleResetBtnAction(ActionEvent event) {
 
 
 
+
        @FXML
     public void initialize() {
         Planet = new Circle(350, 175, 40, Color.BLACK);
         Satellite = new Circle(425, 175, 10, Color.BLUE);
         AnimationPane.getChildren().addAll(Planet, Satellite);
-       
+       ResetBtn.setOnAction(e ->  resetAnimation() );  
     }
       
       
@@ -190,6 +199,9 @@ private void updateSatellitePosition() {
         double dx = Planet.getCenterX() - Satellite.getCenterX();
         double dy = Planet.getCenterY() - Satellite.getCenterY();
         double distance = Math.sqrt(dx * dx + dy * dy);
+        Double D = Math.ceil(distance * 10) / 10;
+        String Distance = String.format("%.1f", D);
+        DistanceTracker.setText(String.valueOf(Distance));
 
         // Calculate simplified gravitational force
         double force = Gconstant * planetmass / (distance * distance);
@@ -199,6 +211,10 @@ private void updateSatellitePosition() {
         // Update velocity
         velocityX += accelerationX;
         velocityY += accelerationY;
+        Double S = Math.ceil(Math.sqrt(velocityX * velocityX + velocityY * velocityY) * 10) ;
+        String Speed = String.format("%.1f", S);
+        SpeedTracker.setText(String.valueOf(Speed));
+        
 
         // Update position
         Satellite.setCenterX(Satellite.getCenterX() + velocityX);
