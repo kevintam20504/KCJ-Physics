@@ -28,7 +28,7 @@ public class CollisionPhysics {
         this.elasticity = elasticity;
     }
 
-    //gets velocity of block1 after collision
+    //gets velocity of block1 after collision depending on elasticity
     public double getVelocity1Final() {
         double velocity = 0;
         if (elasticity == 0) {
@@ -43,7 +43,7 @@ public class CollisionPhysics {
         return velocity;
     }
 
-    //gets velocity of block2 after collision
+    //gets velocity of block2 after collision depending on elasticity
     public double getVelocity2Final() {
         double velocity = 0;
         if (elasticity == 0) {
@@ -98,14 +98,7 @@ public class CollisionPhysics {
     public void setElasticity(double elasticity) {
         this.elasticity = elasticity;
     }
-
-//    @Override
-//    public String toString() {
-//        return "CollisionPhysics{" + "dist=" + distance + "mass1=" + mass1 + ", velocity1=" + velocity1 + ", mass2=" + mass2
-//                + ", velocity2=" + velocity2 + ", elasticity=" + elasticity + ", collisionTime=" + this.getCollisionTime()
-//                + ", block1Dist=" + this.getBlock1DistanceTravelled() + ", block2Dist=" + this.getBlock2DistanceTravelled()
-//                + ", velocity1F=" + this.getVelocity1Final() + ", velocity2F=" + this.getVelocity2Final() + '}';
-//    }
+    
     @Override
     public String toString() {
         return "CollisionPhysics{" + "velocity1=" + velocity1 + ", velocity2=" + velocity2 + ", velocity1F=" + this.getVelocity1Final() + ", velocity2F=" + this.getVelocity2Final() + '}';
