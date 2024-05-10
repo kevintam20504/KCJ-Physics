@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.chart.CategoryAxis?>
-<?import javafx.scene.chart.LineChart?>
-<?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Slider?>
@@ -44,26 +41,7 @@
    </right>
    <bottom>
 
-      <HBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="300.0" prefWidth="1046.0" BorderPane.alignment="BOTTOM_CENTER">
-         <children>
-            <LineChart fx:id="SpeedChart" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" title="Speed" HBox.hgrow="ALWAYS">
-              <xAxis>
-                <CategoryAxis side="BOTTOM" />
-              </xAxis>
-              <yAxis>
-                <NumberAxis side="LEFT" />
-              </yAxis>
-            </LineChart>
-            <LineChart fx:id="DistanceChart" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" title="Distance" HBox.hgrow="ALWAYS">
-              <xAxis>
-                <CategoryAxis side="BOTTOM" />
-              </xAxis>
-              <yAxis>
-                <NumberAxis side="LEFT" />
-              </yAxis>
-            </LineChart>
-         </children>
-      </HBox>
+      <HBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="300.0" prefWidth="1046.0" BorderPane.alignment="BOTTOM_CENTER" />
    </bottom>
    <center>
       <Pane fx:id="AnimationPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" BorderPane.alignment="CENTER" />
