@@ -352,7 +352,7 @@ private void applyWindResistance() {
  private void createHorizontalWall() {
         double centerX = 200 + Paneforscene.getWidth();
         double centerY = 300; 
-  horizontalWallLength = 70; 
+  horizontalWallLength = 10; 
        horizontalWall = new Line(centerX - horizontalWallLength / 2, centerY, centerX + horizontalWallLength / 2, centerY);
     horizontalWall.setStroke(Color.BLACK);
     Paneforscene.getChildren().add(horizontalWall);
@@ -485,7 +485,7 @@ private void applyWindResistance() {
     }
     
      
- double timeInSeconds = (now - startTime) / 1_000_000_000.0;
+ double timeInSeconds = (now - startTime) / 1_000.0;
     double newX = ball.getLayoutX() + velocityX;
     double newY = ball.getLayoutY() + velocityY;
     
