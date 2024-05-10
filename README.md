@@ -6,9 +6,9 @@ Uses `JavaFX 20.0.2`, and includes the [Gradle Wrapper](https://docs.gradle.org/
 
 ## Features
 
--Gravity simulator: satellite orbiting a planet
--Ricochet simulator: projectile launched at a wall with an angle
--Collision simulator: collision of two sliding blocks
+- Gravity simulator: satellite orbiting a planet
+- Ricochet simulator: projectile launched at a wall with an angle
+- Collision simulator: collision of two sliding blocks
 
 ## NetBeans
 
