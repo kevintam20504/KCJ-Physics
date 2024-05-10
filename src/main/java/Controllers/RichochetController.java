@@ -505,12 +505,10 @@ private void applyWindResistance() {
          startSimulation();
     }
      
-      if (ball.getBoundsInParent().intersects(horizontalWall.getBoundsInParent())) {
-           
-            showWinPopup();
-             resetSimulation();
-            
-      }
+     // if (ball.getBoundsInParent().intersects(horizontalWall.getBoundsInParent())) {
+         //  showWinPopup();
+          //   resetSimulation();
+   //   }
      
      ball.setLayoutX(newX);
     ball.setLayoutY(newY);
