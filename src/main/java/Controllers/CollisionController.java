@@ -77,6 +77,9 @@ public class CollisionController {
     TextField collisionCountTf;
 
     @FXML
+    TextField timerTf;
+
+    @FXML
     LineChart<Number, Number> block1Graph;
 
     @FXML
@@ -94,21 +97,20 @@ public class CollisionController {
     @FXML
     NumberAxis block2VelAxis;
 
-    XYChart.Series<Number, Number> series1;
-    XYChart.Series<Number, Number> series2;
+    XYChart.Series<Number, Number> series1 = new XYChart.Series<>();
+    XYChart.Series<Number, Number> series2 = new XYChart.Series<>();
 
     CollisionPhysics physics = new CollisionPhysics();
     AnimationTimer animationTimer;
     int collisionCount = 0;
     boolean isPlaying;
 
+    double lastUpdate = 0;
+    double elapsedTime = 0;
+
     @FXML
     public void initialize() {
         updatePhysics();
-        createAnimation();
-
-        series1 = new XYChart.Series<>();
-        series2 = new XYChart.Series<>();
 
         setupGraphs();
 
@@ -168,73 +170,74 @@ public class CollisionController {
     //creates the animation
     public void createAnimation() {
         animationTimer = new AnimationTimer() {
-            double change1 = physics.getVelocity1();
-            double change2 = physics.getVelocity2();
+            double velocity1 = physics.getVelocity1();
+            double velocity2 = physics.getVelocity2();
 
             double startTime = System.currentTimeMillis();
 
             @Override
             public void handle(long now) {
-                double elapsedTime = (System.currentTimeMillis() - startTime) / 1000;
+                elapsedTime = lastUpdate + (System.currentTimeMillis() - startTime) / 1000;
+                timerTf.setText(String.valueOf(Math.round(elapsedTime * 100) / 100.0));
 
-                updateGraph(block1Graph, series1, elapsedTime, change1);
-                updateGraph(block2Graph, series2, elapsedTime, change2);
+                updateGraph(block1Graph, series1, elapsedTime, velocity1);
+                updateGraph(block2Graph, series2, elapsedTime, velocity2);
 
                 for (int i = 0; i < 100; i++) {
-                    block1.setTranslateX(block1.getTranslateX() + change1 / 100);
-                    block2.setTranslateX(block2.getTranslateX() + change2 / 100);
+                    block1.setTranslateX(block1.getTranslateX() + velocity1 / 100);
+                    block2.setTranslateX(block2.getTranslateX() + velocity2 / 100);
 
                     //if blocks collide
                     if (block1.getBoundsInParent().intersects(block2.getBoundsInParent())) {
-                        updateGraph(block1Graph, series1, elapsedTime, change1);
-                        updateGraph(block2Graph, series2, elapsedTime, change2);
+                        updateGraph(block1Graph, series1, elapsedTime, velocity1);
+                        updateGraph(block2Graph, series2, elapsedTime, velocity2);
                         do {
-                            block1.setTranslateX(block1.getTranslateX() - change1 / 100);
-                            block2.setTranslateX(block2.getTranslateX() - change2 / 100);
+                            block1.setTranslateX(block1.getTranslateX() - velocity1 / 100);
+                            block2.setTranslateX(block2.getTranslateX() - velocity2 / 100);
                         } while (block1.getBoundsInParent().intersects(block2.getBoundsInParent()));
 
-                        if ((change2 == 0 && block2.getTranslateX() == AnchorPane.getRightAnchor(block2)) || (change1 == 0 && block1.getTranslateX() == -AnchorPane.getLeftAnchor(block1))) {
-                            change1 = 0.0;
-                            change2 = 0.0;
+                        if ((velocity2 == 0 && block2.getTranslateX() == AnchorPane.getRightAnchor(block2)) || (velocity1 == 0 && block1.getTranslateX() == -AnchorPane.getLeftAnchor(block1))) {
+                            velocity1 = 0.0;
+                            velocity2 = 0.0;
                             animationTimer.stop();
                         } else {
                             collisionCountTf.setText(String.valueOf(++collisionCount));
-                            change1 = physics.getVelocity1Final();
-                            change2 = physics.getVelocity2Final();
+                            velocity1 = physics.getVelocity1Final();
+                            velocity2 = physics.getVelocity2Final();
                         }
-                        physics.setVelocity1(change1);
-                        physics.setVelocity2(change2);
+                        physics.setVelocity1(velocity1);
+                        physics.setVelocity2(velocity2);
                     }
 
                     //if block1 collides with wall
                     if (block1.getLayoutX() + block1.getTranslateX() < 0.0) {
-                        updateGraph(block1Graph, series1, elapsedTime, change1);
-                        updateGraph(block2Graph, series2, elapsedTime, change2);
+                        updateGraph(block1Graph, series1, elapsedTime, velocity1);
+                        updateGraph(block2Graph, series2, elapsedTime, velocity2);
                         if (reflectingBorderCheckBox.isSelected()) {
                             block1.setTranslateX(-AnchorPane.getLeftAnchor(block1));
                             collisionCountTf.setText(String.valueOf(++collisionCount));
-                            if (physics.getElasticity() < 1 && -change1 < 0.1) {
-                                change1 = 0;
+                            if (physics.getElasticity() < 1 && -velocity1 < 0.1) {
+                                velocity1 = 0;
                             } else {
-                                change1 = -change1 * physics.getElasticity();
+                                velocity1 = -velocity1 * physics.getElasticity();
                             }
-                            physics.setVelocity1(change1);
+                            physics.setVelocity1(velocity1);
                         }
                     }
 
                     //if block2 collides with wall
                     if (block2.getLayoutX() + block2.getTranslateX() > borderPane.getWidth() - block2.getWidth()) {
-                        updateGraph(block1Graph, series1, elapsedTime, change1);
-                        updateGraph(block2Graph, series2, elapsedTime, change2);
+                        updateGraph(block1Graph, series1, elapsedTime, velocity1);
+                        updateGraph(block2Graph, series2, elapsedTime, velocity2);
                         if (reflectingBorderCheckBox.isSelected()) {
                             block2.setTranslateX(AnchorPane.getRightAnchor(block2));
                             collisionCountTf.setText(String.valueOf(++collisionCount));
-                            if (physics.getElasticity() < 1 && change2 < 0.1) {
-                                change2 = 0;
+                            if (physics.getElasticity() < 1 && velocity2 < 0.1) {
+                                velocity2 = 0;
                             } else {
-                                change2 = -change2 * physics.getElasticity();
+                                velocity2 = -velocity2 * physics.getElasticity();
                             }
-                            physics.setVelocity2(change2);
+                            physics.setVelocity2(velocity2);
                         }
                     }
                 }
@@ -243,30 +246,16 @@ public class CollisionController {
     }
 
     void setupGraphs() {
-        series1.getData().clear();
-        series2.getData().clear();
-        block1Graph.getData().clear();
-        block2Graph.getData().clear();
-
         //https://docs.oracle.com/javase/8/javafx/api/javafx/scene/chart/NumberAxis.html
         //makes zero not in range
         block1TimeAxis.setForceZeroInRange(false);
         block2TimeAxis.setForceZeroInRange(false);
 
         //makes ticks not visible
-//        block1TimeAxis.setTickLabelsVisible(false);
-//        block2TimeAxis.setTickLabelsVisible(false);
-
-        //setting labels for the graphs
-        block1VelAxis.setLabel("Block1 Velocity");
-        block2VelAxis.setLabel("Block2 Velocity");
-        block1TimeAxis.setLabel("Time");
-        block2TimeAxis.setLabel("Time");
-
-        block1VelAxis.setLowerBound(-10);
-        block1VelAxis.setUpperBound(10);
-        block2VelAxis.setLowerBound(-10);
-        block2VelAxis.setUpperBound(10);
+        block1TimeAxis.setTickLabelsVisible(false);
+        block2TimeAxis.setTickLabelsVisible(false);
+        block1TimeAxis.setOpacity(0);
+        block2TimeAxis.setOpacity(0);
     }
 
     //updates graph with specified values
@@ -288,6 +277,7 @@ public class CollisionController {
         if (isPlaying) {
             animationTimer.stop();
             isPlaying = false;
+            lastUpdate = elapsedTime;
 
             //enables sliders to be adjusted
             mass1Slider.setDisable(false);
@@ -320,18 +310,35 @@ public class CollisionController {
     //resets the animation
     @FXML
     void resetButtonOnAction(ActionEvent event) {
-        animationTimer.stop();
+        if (animationTimer != null) {
+            animationTimer.stop();
+        }
+
+        //resetting the collision count
         collisionCount = 0;
         collisionCountTf.setText("0");
 
+        lastUpdate = 0;
+        timerTf.setText("0");//resets timer
+
+        //resets position of blocks
         block1.setTranslateX(0);
         block2.setTranslateX(0);
-        updatePhysics();
+
+        updatePhysics();//reupdates physics with the values from sliders
         isPlaying = false;
+
+        //clears graph data
         series1.getData().clear();
         series2.getData().clear();
         block1Graph.getData().clear();
         block2Graph.getData().clear();
+
+        //sets bounds for graphs
+        block1VelAxis.setLowerBound(-10);
+        block1VelAxis.setUpperBound(10);
+        block2VelAxis.setLowerBound(-10);
+        block2VelAxis.setUpperBound(10);
 
         //enables sliders to be adjusted
         mass1Slider.setDisable(false);
@@ -339,8 +346,6 @@ public class CollisionController {
         mass2Slider.setDisable(false);
         velocity2Slider.setDisable(false);
         elasticitySlider.setDisable(false);
-
-        setupGraphs();
 
         //enables resizing window
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -358,7 +363,10 @@ public class CollisionController {
         stage.centerOnScreen();
         stage.setResizable(true);
 
-        animationTimer.stop();
+        if (animationTimer != null) {
+            animationTimer.stop();
+        }
+
         logger.info("Exited Collision scene");
     }
 }
